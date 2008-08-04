@@ -1,3 +1,61 @@
 
-\section{Introducao}
-A computacao em nuvem... \cite{acm:s3,wired:end,akita}
+\section{Introdução}
+A computação em nuvem... \cite{acm:s3,wired:end,akita}
+
+\section{Aspectos}
+
+\subsection{Elasticidade}
+
+% Elastic computing: http://www.elastra.com/wp-content/uploads/2008/03/EC_WhitePaper_FINAL.pdf
+
+% Elástico também significa virtualmente ilimitado?
+
+No contexto de computação na nuvem, elasticidade é a capacidade de o provedor de serviço tem de variar rapidamente a quantidade de recursos computacionais oferecidas para o cliente de acordo com a necessidade do cliente. Recursos computacionais podem ser capacidade de processamento ou espaço de armazenamento.
+
+% Curiosamente, memória RAM não é elástica
+
+Dessa maneira o cliente tem a sua disposição a quantidade de recursos que precisa para atender a sua demanda. Isso é especialmente importante quando a demanda é muito variável no tempo.
+
+Exemplo 1: A empresa cliente mantém um serviço na Internet que ganha exposição na mídia e vê seu número de acessos crescer de um dia para o outro em grandes proporções (efeito Slashdot). Como se trata de uma situação não planejada, em geral seria muito caro aumentar a estrutura de TI na mesma medida do número de acessos. Como resultado, o serviço ficaria indisponível e com isso, a empresa perderia oportunidades e potenciais usuários. Por outro lado, se a empresa consegue investir na estrutura pra manter o serviço disponível durante esses dias de pico de acesso, sua estrutura pode ficar ociosa quando o número de acessos voltar ao normal. Se no entanto a empresa contratar os serviços de um provedor que oferece elasticidade de recursos computacionais, ela não perderá oportunidades e gastará dinheiro na medida certa.
+
+[Mostrar gráfico Red Hat]
+
+Exemplo 2: Uma determinada empresa possui uma estrutura de TI modesta e adequada para suas necessidades cotidianas, mas precisa periodicamente executar em pouco tempo tarefas que exigem grande processamento. Usando serviços na nuvem ela tem a sua disposição uma quantidade virtualmente ilimitada de computadores para fazer essa tarefa o mais rápido possível.
+
+[Mostrar gráfico qtd computadores vs. tempo]
+
+Processamento elástico. Para fornecer capacidade de processamento elástica, os provedores utilizam virtualização. Eles alugam para o cliente máquinas virtuais sob demanda. Se o cliente precisar de mais processamento, ele pode obter rapidamente (através de um API ou interface) mais máquinas virtuais. Obviamente, para aproveitar um maior número de máquinas virtuais, a aplicação do cliente precisa tirar proveito da arquitetura distribuída.
+
+Escrever programas concorrentes corretos é em geral uma tarefa difícil, uma vez que a execução desses programas é não-determinística e a quantidade de possíveis execuções é MUITO GRANDE [citar paper de PSOO]. Existem casos particulares, no entanto, em que é fácil utilizar uma arquitetura paralela. Felizmente esses casos são bastante comuns. É o caso em que temos precisamos trabalhar com dados que podem ser particionados e cada partição pode ser entregue a uma máquina, e o resultado então é consolidado. A dificuldade em escrever programas assim são os detalhes: quais máquinas devem ser alocadas para quais partições, o que fazer se uma máquina falha etc. A biblioteca MapReduce do Google trata esses casos, tornando fácil a programação de aplicações paralelizáveis dessa forma. MapReduce é uma biblioteca proprietária -- tudo o que se sabe sobre ela vem de uma série de artigos publicados por empregados do Google [citar ...]. Existe, no entanto, uma implementação de código aberto dessa idéia, o Hadoop, da Apache, que tem sido bastante utilizada. O Hadoop será explicado na seção ZZZ.
+
+Armazenamento elástico. Os provedores oferecem serviços de armazenamento virtualmente ilimitados de forma transparente ao cliente. Mesmo que os dados do cliente estejam distribuídos em diversos dispositivos de armazenamento geograficamente espalhados, ele enxerga os dados como se estivessem em um lugar só.
+
+Problema: para garantir tempo de acesso aos dados constante em relação à quantidade de dados e à freqüência de acesso, os provedores precisam distribuir e replicar os dados em vários pontos de sua rede. Com isso o sistema de armazenamento deixa de ter consistência estrita e passa a ter consistência "eventual" [cite S3]. Em particular, não é possível oferecer essas garantias de tempo de acesso constante em bancos de dados relacionais [cite S3].
+
+\subsection{Custo}
+
+Para grandes empresas de TI, recursos computacionais como capacidade de processamento e quantidade armazenamento são estratégicos. Para reduzir os custos, essas empresas concentram seu hardware em data centers situados em locais em que a energia elétrica -- essencial para manter todos os computadores e o sistema de refrigeração -- é barata.
+
+Desta forma as empresas têm condições de oferecer seus serviços a um preço relativamente baixo. Em particular, elas podem oferecer serviços de armazenamento e processamento competitivos a ponto de ser mais vantajoso para outras empresas utilizar esses serviços do que investir em uma estrutura de TI própria.
+
+O diretor do site SmugMug, por exemplo, afirma que economizou cerca de 1 milhão de dólares em um período de 12 meses ao aderir ao serviço de armazenamento da Amazon, o S3 \cite{http://blogs.smugmug.com/don/2006/11/10/amazon-s3-show-me-the-money/}. SmugMug é um serviço de armazenamento e exposição de fotos que, em 2006, contabilizava 500 milhões de imagens totalizando cerca de 300 terabytes de dados \cite{http://blogs.smugmug.com/don/2006/08/12/amazon-s3-the-holy-grail/}.
+
+Naturalmente, trocar uma estrutura de TI local por serviços na nuvem não é sempre vantajoso. O Amazon S3 foi projetado para atender a requisitos de confiabilidade, escalabilidade e disponibilidade. Negócios que não possuem esses requisitos podem utilizar uma estrutura de TI de menor qualidade e mais barata.
+
+Em qualquer caso, serviços vendidos no modelo sob demanda são interessantes porque permitem a seus clientes reduzir drasticamente o investimento inicial em TI. Com isso eles podem diminuir o tempo de entrada no mercado e aumentar a taxa de retorno financeiro sobre o investimento.
+
+\section{Disponibilidade}
+%- disponibilidade
+%        (disponibilidade: backup, múltiplos servidores, geradores de energia)
+%        Eventual consistency (preço a ser pago para obter escalabilidade e disponibilidade)
+
+%Lições aprendidas com uma falha do Amazon S3: http://status.aws.amazon.com/s3-20080720.html
+
+
+
+
+\section{Computação sob demanda}
+
+        Cloud vs. utility vs. on-demand computing. (tem diferença?) Grid + utility.
+          (wikipedia) Utility computing (also known as on-demand computing) is the packaging of computing resources, such as computation and storage, as a metered service similar to a physical public utility (such as electricity, water, natural gas, or telephone network).
+
