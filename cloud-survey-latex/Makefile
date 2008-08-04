@@ -1,8 +1,8 @@
 # dot autorizacao.dot -Tsvg | sed 's/10.00pt/10.00px/g'  | sed 's/Helvetica/Nimbus Sans L/g' > autorizacao.svg
 
 SOURCEDOCUMENT=cloud
-PDFVIEWER=evince
-#xpdf -z page -remote rodrigo-xpdf
+#PDFVIEWER=evince
+PDFVIEWER=xpdf -z page -remote rodrigo-xpdf
 
 CAPITULOS=$(wildcard *.tex)
 
