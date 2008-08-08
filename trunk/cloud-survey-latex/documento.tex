@@ -17,23 +17,29 @@ Elasticidade é a habilidade que alguns provedores de computação na nuvem têm
 
 A elasticidade é especialmente importante quando a demanda do cliente é imprevisível ou irregular. Por exemplo, um site da Internet que ganha exposição na mídia passa a receber um número de visitas muito maior do que antes. Se a estrutura computacional da qual o site depende não crescer na mesma medida, é provável que ele fique indisponível e, como resultado, perca potenciais usuários.
 
-Outra situação comum é a de tarefas que exigem grande poder computacional e que precisam ser executadas esporadicamente. Derek Gottfrid, do jornal The New York Times, relata como conseguiu processar 4 terabytes de imagens em apenas 24 horas utilizando a estrutura de computação elástica da empresa Amazon [cite self-service, prorated super computing fun]. Com o processamento elástico é possível optar entre usar poucos processadores por muito tempo ou usar muitos processadores por pouco tempo -- uma possibilidade importante quando as tarefas têm prazos curtos.
+%Outra situação comum é a de tarefas que exigem grande poder computacional e que precisam ser executadas esporadicamente. Derek Gottfrid, do jornal The New York Times, relata como conseguiu processar 4 terabytes de imagens em apenas 24 horas utilizando a estrutura de computação elástica da empresa Amazon [cite self-service, prorated super computing fun]. Com o processamento elástico é possível optar entre usar poucos processadores por muito tempo ou usar muitos processadores por pouco tempo -- uma possibilidade importante quando as tarefas têm prazos curtos.
 % Talvez o exemplo do NYTimes deva ficar na subseção processamento elástico, onde se fala sobre a arquitetura distribuída.
 
 \subsubsection{Processamento elástico}
 
-Necessidades crescentes de processamento podem ser supridas por processadores cada vez mais rápidos, mas só até certo ponto. Uma série de questões técnicas e econômicas cria um limite na capacidade de processamento de um único processador. Por isso os provedores de processamento elástico possuem arquiteturas distribuídas e oferecem a seus clientes a possibilidade de utilizar vários processadores ao mesmo tempo.
+Necessidades crescentes de processamento podem ser supridas por processadores cada vez mais rápidos, mas só até certo ponto. Uma série de questões técnicas e econômicas cria um limite na capacidade de processamento de um único processador. Por isso os provedores de processamento elástico possuem arquiteturas distribuídas e oferecem a seus clientes a possibilidade de utilizarem vários processadores ao mesmo tempo.
 
 %A alternativa que os provedores oferecem para quem precisa de alto desempenho é a possibilidade de utilizar vários processadores simultaneamente.
 
 Desenvolver programas que tirem proveito de múltiplos processadores é em geral uma tarefa difícil e sujeita a erros [cite Software and the Concurrency Revolution]. Felizmente muitas tarefas de manipulação de dados podem ser divididas em subtarefas independentes que são então aplicadas a porções dos dados. Basta então executar uma subtarefa em cada processador e então unificar os resultados. 
 
-Naturalmente, programa executados em sistemas distribuídos precisam estar preparados para escalonar a execução dos processos nos processadores disponíveis, gerenciar a comunicação entre processos e lidar com falhas nos computadores e na rede que os interliga. Essas preocupações são endereçadas pela biblioteca MapReduce [cite MapReduce: Simplified Data Processing on Large Clusters], do Google. Com essa biblioteca, mesmo programadores sem muita experiência podem escrever programas que aproveitam os recursos de um sistema distribuído. Aos programadores cabe especificar como os dados são particionados e como os resultados devem ser unificados.
+Naturalmente, programas executados em sistemas distribuídos precisam estar preparados para escalonar a execução dos processos nos processadores disponíveis, gerenciar a comunicação entre processos e lidar com falhas nos computadores e na rede que os interliga. Essas preocupações são endereçadas pela biblioteca MapReduce [cite MapReduce: Simplified Data Processing on Large Clusters], do Google. Com essa biblioteca, mesmo programadores sem muita experiência podem escrever programas que aproveitam os recursos de um sistema distribuído. Aos programadores cabe especificar como os dados são particionados e como os resultados devem ser unificados.
+
+%Outra situação comum é a de tarefas que exigem grande poder computacional e que precisam ser executadas esporadicamente. 
+Derek Gottfrid, do jornal The New York Times, relata como conseguiu processar 4 terabytes de imagens em apenas 24 horas utilizando a estrutura de computação elástica da empresa Amazon [cite self-service, prorated super computing fun]. Ele usou o Apache Hadoop -- implementação livre do MapReduce -- para distribuir a tarefa entre 100 máquinas virtuais. Com o processamento elástico é possível optar entre usar poucos processadores por muito tempo ou usar muitos processadores por pouco tempo. O caso de Derek ilustra a importância dessa possibilidade quando as tarefas têm prazos curtos. 
 
 \subsubsection{Armazenamento elástico}
+
+TODO: reler artigo Building a database on S3 e revisar este texto.
+
 Os provedores oferecem serviços de armazenamento virtualmente ilimitados de forma transparente ao cliente. Mesmo que os dados do cliente estejam distribuídos em diversos dispositivos de armazenamento geograficamente espalhados, ele enxerga os dados como se estivessem em um lugar só.
 
-Problema: para garantir tempo de acesso aos dados constante em relação à quantidade de dados e à freqüência de acesso, os provedores precisam distribuir e replicar os dados em vários pontos de sua rede. Com isso o sistema de armazenamento deixa de ter consistência estrita e passa a ter consistência "eventual" [cite S3]. Em particular, não é possível oferecer essas garantias de tempo de acesso constante em bancos de dados relacionais [cite S3].
+Problema: para garantir tempo de acesso aos dados constante em relação à quantidade de dados e à freqüência de acesso, os provedores precisam distribuir e replicar os dados em vários pontos de sua rede. Com isso o sistema de armazenamento deixa de ter consistência estrita e passa a ter consistência "eventual" [cite S3]. Em particular, não é possível oferecer essas garantias de tempo de acesso constante em bancos de dados relacionais.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -84,27 +90,11 @@ O Amazon S3 garante no contrato uma disponibilidade de 99,9 porcento [cite Amazo
 %        Eventual consistency (preço a ser pago para obter escalabilidade e disponibilidade)
 
 
-\begin{comment}
+%O cenário fica mais complexo se considerarmos que tanto computadores quanto as conexões de rede entre os computadores podem se tornar lentas ou mesmo falhar. A biblioteca Hadoop, uma implementação livre do modelo MapReduce
 
+%podem um cenário em que os computadores estão ligados através de uma rede não-confiável, 
+%No caso de sistemas distribuídos, como os sistemas de muitos provedores de computação na nuvem, é um pouco mais complicado. A comunicação entre processadores é através de conexões de rede, que podem falhar; as próprias máquinas podem falhar ou ficar lentas
 
-Ela facilita o desenvolvimento de programas que aproveitam os recursos de 
+%MapReduce: modelo de programação para processar grandes volumes de dados. O sistema é responsável por escalonar a execução do programa em um conjunto de computadores, lidar com falhas de máquina e de rede, gerenciar a comunicação entre máquinas. Com isso programadores sem experiência em computação paralela e distribuídos pode usar facilmentes os recursos de um grande sistema distribuído. [cite MapReduce: Simplified Data Processing on Large Clusters]
 
- facilita o desenvolvimento de programas que podem ser paralelizados desta forma. Um programador define como particionar os dados e unificar os resultados, e a biblioteca escalona a execução dos processos nos processadores disponíveis, gerencia a comunicação entre máquinas e lida com falhas.
-
-
- e gerenciar a comunicação entre máquinas, 
-
-O cenário fica mais complexo se considerarmos que tanto computadores quanto as conexões de rede entre os computadores podem se tornar lentas ou mesmo falhar. A biblioteca Hadoop, uma implementação livre do modelo MapReduce
-
-podem um cenário em que os computadores estão ligados através de uma rede não-confiável, 
-No caso de sistemas distribuídos, como os sistemas de muitos provedores de computação na nuvem, é um pouco mais complicado. A comunicação entre processadores é através de conexões de rede, que podem falhar; as próprias máquinas podem falhar ou ficar lentas
-
-Em um sistema distribuído, como é o caso de muitos provedores de computaçãm na nuvem, 
-
-"paralelismo de dados"
-MapReduce: modelo de programação para processar grandes volumes de dados
-o sistema é responsável por escalonar a execução do programa em um conjunto de computadores, lidar com falhas de máquina e de rede, gerenciar a comunicação entre máquinas. Com isso programadores sem experiência em computação paralela e distribuídos pode usar facilmentes os recursos de um grande sistema distribuído.
-[cite MapReduce: Simplified Data Processing on Large Clusters]
-
-Escrever programas concorrentes corretos é em geral uma tarefa difícil, uma vez que a execução desses programas é não-determinística e a quantidade de possíveis execuções é MUITO GRANDE [citar paper de PSOO]. Existem casos particulares, no entanto, em que é fácil utilizar uma arquitetura paralela. Felizmente esses casos são bastante comuns. É o caso em que temos precisamos trabalhar com dados que podem ser particionados e cada partição pode ser entregue a uma máquina, e o resultado então é consolidado. A dificuldade em escrever programas assim são os detalhes: quais máquinas devem ser alocadas para quais partições, o que fazer se uma máquina falha etc. A biblioteca MapReduce do Google trata esses casos, tornando fácil a programação de aplicações paralelizáveis dessa forma. MapReduce é uma biblioteca proprietária -- tudo o que se sabe sobre ela vem de uma série de artigos publicados por empregados do Google [citar ...]. Existe, no entanto, uma implementação de código aberto dessa idéia, o Hadoop, da Apache, que tem sido bastante utilizada. O Hadoop será explicado na seção ZZZ.
-\end{comment}
+%Escrever programas concorrentes corretos é em geral uma tarefa difícil, uma vez que a execução desses programas é não-determinística e a quantidade de possíveis execuções é MUITO GRANDE [citar paper de PSOO]. Existem casos particulares, no entanto, em que é fácil utilizar uma arquitetura paralela. Felizmente esses casos são bastante comuns. É o caso em que temos precisamos trabalhar com dados que podem ser particionados e cada partição pode ser entregue a uma máquina, e o resultado então é consolidado. A dificuldade em escrever programas assim são os detalhes: quais máquinas devem ser alocadas para quais partições, o que fazer se uma máquina falha etc. A biblioteca MapReduce do Google trata esses casos, tornando fácil a programação de aplicações paralelizáveis dessa forma. MapReduce é uma biblioteca proprietária -- tudo o que se sabe sobre ela vem de uma série de artigos publicados por empregados do Google [citar ...]. Existe, no entanto, uma implementação de código aberto dessa idéia, o Hadoop, da Apache, que tem sido bastante utilizada. O Hadoop será explicado na seção ZZZ.
