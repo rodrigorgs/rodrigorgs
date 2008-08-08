@@ -39,7 +39,7 @@ TODO: reler artigo Building a database on S3 e revisar este texto.
 
 Os provedores oferecem serviços de armazenamento virtualmente ilimitados de forma transparente ao cliente. Mesmo que os dados do cliente estejam distribuídos em diversos dispositivos de armazenamento geograficamente espalhados, ele enxerga os dados como se estivessem em um lugar só.
 
-Problema: para garantir tempo de acesso aos dados constante em relação à quantidade de dados e à freqüência de acesso, os provedores precisam distribuir e replicar os dados em vários pontos de sua rede. Com isso o sistema de armazenamento deixa de ter consistência estrita e passa a ter consistência "eventual" [cite S3]. Em particular, não é possível oferecer essas garantias de tempo de acesso constante em bancos de dados relacionais.
+Problema: para garantir tempo de acesso aos dados constante em relação à quantidade de dados e à freqüência de acesso [3º parágrafo de Building a database on S3], os provedores precisam distribuir e replicar os dados em vários pontos de sua rede. Com isso o sistema de armazenamento deixa de ter consistência estrita e passa a ter consistência "eventual" [cite S3]. Em particular, não é possível oferecer essas garantias de tempo de acesso constante em bancos de dados relacionais.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -88,6 +88,7 @@ O Amazon S3 garante no contrato uma disponibilidade de 99,9 porcento [cite Amazo
 %- disponibilidade
 %        (disponibilidade: backup, múltiplos servidores, geradores de energia)
 %        Eventual consistency (preço a ser pago para obter escalabilidade e disponibilidade)
+% A empresa webmetrics mediu a disponibilidade do Amazon AWS e chegou a 99.9912%
 
 
 %O cenário fica mais complexo se considerarmos que tanto computadores quanto as conexões de rede entre os computadores podem se tornar lentas ou mesmo falhar. A biblioteca Hadoop, uma implementação livre do modelo MapReduce
