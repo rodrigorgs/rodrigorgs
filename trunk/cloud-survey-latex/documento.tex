@@ -1,6 +1,6 @@
 
 \section{Introdução}
-A computação em nuvem... \cite{acm:s3,wired:end,akita}
+A computação em nuvem... \cite{acm:s3,wired:end,akita,teste}
 
 \section{Aspectos}
 
@@ -82,13 +82,41 @@ O diretor do site SmugMug, por exemplo, afirma que economizou cerca de 1 milhão
 Naturalmente, trocar uma estrutura de TI local por serviços na nuvem não é sempre vantajoso. O Amazon S3 foi projetado para atender a requisitos de confiabilidade, escalabilidade e disponibilidade. Negócios que não possuem esses requisitos podem utilizar uma estrutura de TI mais barata.
 
 \section{Disponibilidade}
-O Amazon S3 garante no contrato uma disponibilidade de 99,9 porcento [cite Amazon S3 FAQs].
+
+Disponibilidade de um serviço é a fração do tempo em que ele está funcional. A indisponibilidade de um serviço deixa seus usuários frustrados e muitas vezes acarreta em prejuízo para a empresa que mantém o serviço.
+
+Serviços mantidos na web normalmente são projetados para funcionar ininterruptamente, o dia inteiro. Uma disponibilidade próxima a 100\% implica uma infra-estrutura que se comporta bem na presença de falhas. É preciso ter recursos redundantes e os dados dos clientes precisam ser replicados dentre esses recursos.
+
+Itens muito acessados precisam ser replicados. Do contrário, o item não conseguirá ser acessado por todos os usuários que querem acessá-lo.
+
+No caso de armazenamento, isso significa que cada item armazenado pelo cliente precisa ser replicado em vários recursos. Para não prejudicar o desempenho nas atualizações de dados, é necessário atualizar as cópias dos dados de forma assíncrona. Em algum momento os dados todas as cópias estarão atualizadas, mas antes disso as leituras poderão retornar dados inconsistentes.
+
+% Na verdade o parágrafo anterior tem muito mais a ver com latência.
+
+O serviço de banco de dados Amazon SimpleDB utiliza esse modelo de replicação e atualização. A documentação informa que a consistência normalmente é alcançada em poucos segundos, mas condições como alta carga do sistema ou falhas na rede podem aumentar esse tempo. [cite http://docs.amazonwebservices.com/AmazonSimpleDB/2007-11-07/DeveloperGuide/index.html?SDB\_Glossary.html]
+
+% items and indices are replicated, and the replicas are updated asynchronously (amazon simpledb thoughts)
+
+O contrato do serviço Amazon S3 prevê créditos para clientes quando a disponibilidade do serviço for abaixo de 99,9\%. Medições mostram que o serviço tem conseguido manter a disponibilidade acima de 99,99\% na maioria dos meses [citar webmetrics].
+
+Apesar disso, manter a disponibilidade alta ainda é um desafio. Em ... de 2007, o serviço ficou fora do ar por cerca de 6 horas [cite http://status.aws.amazon.com/s3-20080720.html].
+% Por causa do protocolo de fofoca. Já ficou minutos fora do ar por falhas em core switches (switches centrais).
+
 %Lições aprendidas com uma falha do Amazon S3: http://status.aws.amazon.com/s3-20080720.html
+
+% items and indices are replicated, and the replicas are updated asynchronously (amazon simpledb thoughts)
 
 %- disponibilidade
 %        (disponibilidade: backup, múltiplos servidores, geradores de energia)
 %        Eventual consistency (preço a ser pago para obter escalabilidade e disponibilidade)
 % A empresa webmetrics mediu a disponibilidade do Amazon AWS e chegou a 99.9912%
+
+
+
+
+
+
+
 
 
 %O cenário fica mais complexo se considerarmos que tanto computadores quanto as conexões de rede entre os computadores podem se tornar lentas ou mesmo falhar. A biblioteca Hadoop, uma implementação livre do modelo MapReduce

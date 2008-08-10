@@ -2,7 +2,7 @@
 
 SOURCEDOCUMENT=cloud
 #PDFVIEWER=evince
-PDFVIEWER=xpdf -z page -remote rodrigo-xpdf
+PDFVIEWER=xpdf -remote rodrigo-xpdf
 
 CAPITULOS=$(wildcard *.tex)
 
