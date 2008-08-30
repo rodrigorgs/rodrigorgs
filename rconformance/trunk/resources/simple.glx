@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gxl SYSTEM "http://www.gupro.de/GXL/gxl-1.0.dtd">
+<gxl xmlns:link="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.gupro.de/GXL/xmlschema/gxl-1.0.xsd">
+	<graph edgemode="directed" edgeids="false" hypergraph="false" id="simpleGraph" >
+		<node id="node0" >
+			<attr name="label" >
+				  <string>0</string>
+			</attr>
+			<attr name="access" >
+				  <string>public</string>
+			</attr>
+			<attr name="type" >
+				  <string>class</string>
+			</attr>
+			<attr name="shortlabel" >
+				  <string>0</string>
+			</attr>
+		</node>
+		<node id="node1" >
+			<attr name="label" >
+				  <string>1</string>
+			</attr>
+			<attr name="access" >
+				  <string>public</string>
+			</attr>
+			<attr name="type" >
+				  <string>class</string>
+			</attr>
+			<attr name="shortlabel" >
+				  <string>1</string>
+			</attr>
+		</node>
+		<node id="node2" >
+			<attr name="label" >
+				  <string>2</string>
+			</attr>
+			<attr name="access" >
+				  <string>public</string>
+			</attr>
+			<attr name="type" >
+				  <string>class</string>
+			</attr>
+			<attr name="shortlabel" >
+				  <string>2</string>
+			</attr>
+		</node>
+		<node id="node3" >
+			<attr name="label" >
+				  <string>3</string>
+			</attr>
+			<attr name="access" >
+				  <string>public</string>
+			</attr>
+			<attr name="type" >
+				  <string>class</string>
+			</attr>
+			<attr name="shortlabel" >
+				  <string>3</string>
+			</attr>
+		</node>
+		<node id="node4" >
+			<attr name="label" >
+				  <string>4</string>
+			</attr>
+			<attr name="access" >
+				  <string>public</string>
+			</attr>
+			<attr name="type" >
+				  <string>class</string>
+			</attr>
+			<attr name="shortlabel" >
+				  <string>4</string>
+			</attr>
+		</node>
+		<edge from="node0" to="node0" />
+		<edge from="node4" to="node1" />
+		<edge from="node3" to="node4" />
+		<edge from="node1" to="node4" />
+		<edge from="node1" to="node1" />
+		<edge from="node1" to="node1" />
+		<edge from="node0" to="node3" />
+		<edge from="node4" to="node1" />
+		<edge from="node1" to="node4" />
+		<edge from="node2" to="node2" />
+		<edge from="node4" to="node4" />
+		<edge from="node0" to="node2" />
+		<edge from="node2" to="node0" />
+		<edge from="node0" to="node0" />
+		<edge from="node4" to="node4" />
+		<edge from="node2" to="node2" />
+		<edge from="node2" to="node0" />
+		<edge from="node0" to="node2" />
+	</graph>
+</gxl>
