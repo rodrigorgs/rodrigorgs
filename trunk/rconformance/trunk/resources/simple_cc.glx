@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gxl SYSTEM "http://www.gupro.de/GXL/gxl-1.0.dtd">
+<gxl xmlns:link="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.gupro.de/GXL/xmlschema/gxl-1.0.xsd">
+	<graph edgemode="directed" edgeids="false" hypergraph="false" id="simpleGraph" >
+		<node id="cluster2" >
+			<graph edgemode="directed" edgeids="false" hypergraph="false" id="cluster2" >
+				<node id="node3" />
+			</graph>
+		</node>
+		<node id="cluster0" >
+			<graph edgemode="directed" edgeids="false" hypergraph="false" id="cluster0" >
+				<node id="node0" />
+				<node id="node2" />
+			</graph>
+		</node>
+		<node id="cluster1" >
+			<graph edgemode="directed" edgeids="false" hypergraph="false" id="cluster1" >
+				<node id="node1" />
+				<node id="node4" />
+			</graph>
+		</node>
+	</graph>
+</gxl>
