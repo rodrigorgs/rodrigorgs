@@ -1,0 +1,51 @@
+== Algoritmo de aglomeração baseado em centros fornecidos pelo usuário ==
+
+O usuário escolhe alguns nós que serão os centros dos clusters.
+
+Inicialmente, cada centro está em um cluster que contém apenas ele próprio e
+os demais nós não estão em nenhum cluster.
+
+O algoritmo calcula a distância d(x, y) para cada x que for centro.
+
+Loop:
+  Seja (c, d) tal que c é centro, d não está em nenhum cluster e  d(c, d) é
+  mínima.
+  Adiciona d ao cluster de c.
+  Repete até todos os nós estarem em algum cluster (ou então repete até que
+  a menor distância seja muito grande)
+
+Rodrigo Rocha, 2 de setembro de 2008
+
+== Métrica de distância baseada em similaridade textual ==
+
+A idéia dessa métrica é extrair informação a partir de documentação de classes
+(ex.: javadoc).
+
+Para cada classe C é calculada a similaridade textual de sua documentação com
+a documentação de todas as outras classes, conforme explicado no arquivo sobre
+a ferramenta SNIAFL (usando Information Retrieval).
+
+Rodrigo Rocha, 2 de setembro de 2008
+
+== Métrica de distância baseada em uso ==
+
+Métrica mais adequada para bibliotecas.
+Apelido: "quem usa X também usa Y".
+
+Para cada elemento E de um programa, verifica todos os elementos U que usam
+o elemento E. O espaço de busca inclui o próprio programa sob análise, outros
+programas indicados pelo usuário e programas indexados por serviços como
+Google Code Search, Koders e Krugle.
+
+Seja {E1, E2, ..., En} o conjunto de elementos que Ui usa (necessariamente E
+pertence a este conjunto). A distância d(E, Ej) é então definida como a
+confiança da regra de associação E => Ej.
+
+Fica em aberto o que caracteriza o uso de uma entidade por outra. Esse tipo
+de informação pode ser obtida por análise estática, análise dinâmica ou mesmo
+análise histórica (nesse caso, uma entidade usuária seria um par 
+<desenvolvedor, commit> e as entidades usadas seriam as entidades commitadas).
+
+Rodrigo Rocha, 2 de setembro de 2008
+
+== ==
