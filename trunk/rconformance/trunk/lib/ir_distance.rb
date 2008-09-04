@@ -2,21 +2,27 @@
 
 require 'set'
 
+
+def assert
+	raise "Assertion failed !" unless yield # if $DEBUG
+end
+
+
 class DocSpace
 	attr_reader :doc_list, :terms, :idf, :weight
 
 	def initialize
-		@doc_list = []
+		@doc_list = Hash.new
 	end
 	
 	def add_doc(doc)
-		@doc_list << doc
+		@doc_list[doc.name] = doc
 		return doc
 	end
 
 	def done
 		@terms = []
-		@doc_list.each { |doc| @terms += doc.terms }
+		@doc_list.values.each { |doc| @terms += doc.terms }
 		@terms.uniq!
 
 		compute_idf
@@ -26,9 +32,9 @@ class DocSpace
 	def compute_idf
 		@idf = Hash.new
 		@terms.each do |term|
-			c = @doc_list.select { |d| d.contain? term }.size
-			@idf[term] = if c == 0 then 
-				@idf[term] = 0 
+			c = @doc_list.values.select { |d| d.contain? term }.size
+			if c == 0 then 
+				@idf[term] = 0  # TODO: does it make sense in IR?
 			else 
 				@idf[term] = Math.log(@doc_list.size.fdiv c)
 			end
@@ -37,11 +43,14 @@ class DocSpace
 
 	# TODO: compute weights also for queries
 	def compute_weights
-		@weight = Hash.new #Array.new(@terms.size) { Array.new(@doc_list.size) }
+		@weight = Hash.new
 		
 		@terms.each do |term|
-			@doc_list.each do |doc|
-				@weight[[term,doc]] = doc.freq_rel(term) * @idf[term]
+			@doc_list.values.each do |doc|
+				value = doc.freq_rel(term) * @idf[term]
+				@weight[[term,doc]] = value
+
+				assert { value >= 0 }
 			end
 		end
 	end
@@ -55,7 +64,12 @@ class DocSpace
 			den1 += @weight[[term,doc]]**2
 			den2 += @weight[[term,query]]**2
 		end
-		return num.fdiv(Math.sqrt(den1) * Math.sqrt(den2))
+		den = Math.sqrt(den1) * Math.sqrt(den2)
+		if den == 0
+			return num # TODO: does it make sense in IR?
+		else
+			return num.fdiv(den)
+		end
 	end
 end
 
@@ -96,7 +110,7 @@ end
 
 DELIMITER = '---IRDelimiter---'
 
-def print_dists(instream, outstream)
+def create_space(instream)
 	space = DocSpace.new
 	# TODO: catch EOF exception
 	line = ''
@@ -114,8 +128,13 @@ def print_dists(instream, outstream)
 	end
 
 	space.done
+	return space
+end
 
-	docs = space.doc_list
+def print_dists(instream, outstream)
+	space = create_space(instream)
+
+	docs = space.doc_list.values
 	n = docs.size
 	(0..n-1).each do |i|
 		(i..n-1).each do |j|
