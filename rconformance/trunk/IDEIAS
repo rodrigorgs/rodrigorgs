@@ -48,4 +48,49 @@ análise histórica (nesse caso, uma entidade usuária seria um par
 
 Rodrigo Rocha, 2 de setembro de 2008
 
-== ==
+
+------------------------
+Proposta de projeto para a disciplina Evolução de Software
+
+== Introdução == / Motivação
+
+A arquitetura de um sistema pode ser apresentada sob diversos pontos de vista.
+Uma descrição arquitetural representa uma visão do sistema que é endereça
+alguma preocupação de um stakeholder [4+1].
+
+No contexto de evolução de software é especialmente importante lidar com a
+compreensão de software, de interesse principalmente para desenvolvedores que
+precisam alterar o software. Diversas soluções para essa preocupação involvem
+agrupar entidades de código relacionadas em conjuntos (clusters), a fim de
+facilitar o entendimento e o raciocínio sobre o software.
+
+== Objetivo ==
+
+Este trabalho tem como objetivo avaliar o papel de duas métricas de distância
+entre entidades de código no contexto de compreensão de software.
+
+== Metodologia ==
+
+Implementação das métricas.
+
+Estudo de algoritmos de particionamento a fim de identificar um algoritmo que
+tenha como entrada uma função de distância entre entidades.
+
+Escolha de dois softwares para análise.
+
+Serão escolhidos dois programas cujo funcionamento o autor compreenda.
+Para cada métrica M:
+- O projeto P1 será particionado de acordo com a métrica M.
+- As partições serão analisadas a fim de se conceber descrições intuitivas
+que se apliquem a todos os elementos de uma partição, para todas as partições.
+- O projeto P2 será então particionado usando a mesma métrica.
+- Analisar-se-á quais descrições intuitivas se aplicam ao projeto 2.
+
+Da mesma forma, será feito um estudo comparativo dos particionamentos gerados
+por cada uma das métricas. A comparação será feita manualmente a fim de
+adquirir uma intuição sobre o papel de cada métrica, mas também serão usados
+algoritmos de comparação de particionamento, como o MoJo Distance.
+
+== Referências ==
+
+...
