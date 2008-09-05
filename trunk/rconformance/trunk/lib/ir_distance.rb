@@ -36,7 +36,7 @@ class DocSpace
 			if c == 0 then 
 				@idf[term] = 0  # TODO: does it make sense in IR?
 			else 
-				@idf[term] = Math.log(@doc_list.size.fdiv c)
+				@idf[term] = Math.log(@doc_list.size / (0.0 + c))
 			end
 		end
 	end
@@ -68,7 +68,7 @@ class DocSpace
 		if den == 0
 			return num # TODO: does it make sense in IR?
 		else
-			return num.fdiv(den)
+			return (0.0 + num) / den
 		end
 	end
 end
@@ -88,7 +88,7 @@ class Document
 	
 		max_freq = @freq_abs.values.max
 		@freq_rel = Hash.new
-		@freq_abs.each_pair { |k, v| @freq_rel[k] = v.fdiv max_freq }
+		@freq_abs.each_pair { |k, v| @freq_rel[k] = (0.0 + v) / max_freq }
 	end
 
 	def contain?(term)
@@ -143,4 +143,4 @@ def print_dists(instream, outstream)
 	end
 end
 
-print_dists STDIN, STDOUT
+#print_dists STDIN, STDOUT
