@@ -2,13 +2,18 @@
 
 require 'set'
 
-packages = Set.new
-sourcepath = ARGV.shift || '.'
+def javadoc(sourcepath, args)
+	packages = Set.new
 
-Dir.glob("#{sourcepath}/**/*.java") do |file|
-	IO.readlines(file).grep(/package (.*);/) { packages.add $1 }
+	Dir.glob("#{sourcepath}/**/*.java") do |file|
+		IO.readlines(file).grep(/package (.*);/) { packages.add $1 }
+	end
+
+	command = "javadoc #{args.join(' ')} #{packages.to_a.join(' ')}"
+	puts "Running command #{command}"
+	puts `#{command}`
+	
 end
 
-command = "javadoc #{ARGV.join(' ')} #{packages.to_a.join(' ')}"
-puts "Running command #{command}"
-puts `#{command}`
+#sourcepath = ARGV.shift || '.'
+#javadoc sourcepath, ARGV

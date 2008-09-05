@@ -1,22 +1,13 @@
 #!/usr/bin/env jruby
 require 'java'
 
-# TODO: cleanup imports
 import 'edu.uci.ics.jung.graph.Graph'
-#import 'edu.uci.ics.jung.graph.Vertex'
-#import 'edu.uci.ics.jung.graph.impl.SparseVertex'
-#import 'edu.uci.ics.jung.graph.impl.SparseGraph'
-#import 'edu.uci.ics.jung.graph.impl.DirectedSparseEdge'
-#import 'edu.uci.ics.jung.graph.impl.UndirectedSparseEdge'
-#import 'edu.uci.ics.jung.algorithms.blockmodel.GraphCollapser' 
 
 import 'abstractor.cluster.mq.optimization.MQRanker'
 import 'abstractor.cluster.mq.MQClusterer'
 import 'abstractor.util.FileUtilities'
 
 import 'design.model.Design'
-#import 'design.model.HierarchicalSparseGraph'
-#import 'design.util.Utilities'
 
 class MQFuzzyRanker
 	include MQRanker
@@ -88,7 +79,27 @@ class Distance
 	end
 end
 
-def abstract(inputFilename, outputFilename, propFilename)
+# --------------------------------------------------------------------
+
+require 'ir_distance'
+import 'edu.uci.ics.jung.graph.Vertex'
+
+class IRDistance
+	def initialize(doc_space)
+		@doc_space = doc_space
+	end
+
+	def distance(e1, e2)
+		d1 = @doc_space.doc_list[e1.getUserDatum('label')]
+		d2 = @doc_space.doc_list[e2.getUserDatum('label')]
+		#assert { !d1.nil?}
+		#assert { !d2.nil?}
+
+		return @doc_space.dist(d1, d2)
+	end
+end
+
+def abstract(inputFilename, outputFilename, propFilename) #, srcfolder)
 	d = Design.new inputFilename
 
 	props = FileUtilities.loadProperties propFilename
@@ -100,6 +111,8 @@ def abstract(inputFilename, outputFilename, propFilename)
 
 	d.saveDesign outputFilename
 end
+
+p abstract
 
 abstract ARGV[0], ARGV[1], 'mqcluster.properties'
 
