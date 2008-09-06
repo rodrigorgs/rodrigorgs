@@ -55,14 +55,18 @@ class DocSpace
 		end
 	end
 
+	def weight(keyval)
+		@weight[keyval] || 0.0
+	end
+
 	def dist(doc, query)
 		num = 0
 		den1 = 0
 		den2 = 0
 		@terms.each do |term|
-			num += @weight[[term,doc]] * @weight[[term,query]]
-			den1 += @weight[[term,doc]]**2
-			den2 += @weight[[term,query]]**2
+			num += weight([term,doc]) * weight([term,query])
+			den1 += weight([term,doc])**2
+			den2 += weight([term,query])**2
 		end
 		den = Math.sqrt(den1) * Math.sqrt(den2)
 		if den == 0

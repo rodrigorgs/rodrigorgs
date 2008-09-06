@@ -3,6 +3,7 @@ require 'java'
 
 require 'set'
 require 'ir_distance'
+require 'MQFuzzyRanker'
 
 import 'edu.uci.ics.jung.graph.Vertex'
 import 'abstractor.util.FileUtilities'
@@ -31,11 +32,11 @@ def create_space(srcpath)
 	space = DocSpace.new
 	root = DummyDoclet.rootDoc
 	root.classes.each do |c|
-		puts c.qualifiedName
 		doc = Document.new(c.qualifiedName, c.commentText)
 		space.add_doc doc
 	end
 	space.done
+	return space
 end
 
 class IRDistance
@@ -53,8 +54,40 @@ class IRDistance
 	end
 end
 
-def abstract_ir(inFilename, outFilename, srcpath)
-	# ...
+def abstract_ir(inputFilename, outputFilename, srcpath)
+	space = create_space(srcpath)
+	ranker = MQFuzzyRanker.new(IRDistance.new(space))
+	abstract(inputFilename, outputFilename, ranker)
+end
+
+def html(srcpath, outstream)
+	space = create_space(srcpath)
+	distances = []
+	n = space.doc_list.size
+	puts "-- Number of elements: #{n}"
+	docs = space.doc_list.values.dup
+
+	(0..n-1).each do |i|
+		doc1 = docs[i]
+		(i+1..n-1).each do |j|
+			doc2 = docs[j]
+			distances << [doc1, doc2, space.dist(doc1, doc2)] if doc1 != doc2
+		end
+	end
+
+	distances.sort! { |a, b| b[2] <=> a[2] }
+
+	outstream.puts "<table border=\"1\">"
+	distances.first(20).each do |d|
+		outstream.puts "<tr>"
+		(0..1).each { |i| 
+			outstream.puts "<td valign=\"top\">#{'%.2f' % d[2]} - 
+			<b>#{d[i].name}</b><br/>#{d[i].text}</td>"
+		}
+		outstream.puts "<tr/>"
+	end
+	outstream.puts "</table>"
+
 end
 
 def properties
@@ -66,8 +99,8 @@ def properties
 	'edgeType' => 'multiple',
 	'MQAlgorithm' => 'RANDOMIZED_SEARCH',
 	'optimizationFunction' => 'TURBO',
-	'convergenceThreshold' => '1.0E-6',
-	'maxIterations' => '1000',
+	'convergenceThreshold' => '0.2', #'1.0E-6',
+	'maxIterations' => '20', # '1000'
 	'numPaths' => '10'
 	}
 	hash.each_pair do |key, value|
@@ -89,4 +122,10 @@ def abstract(inputFilename, outputFilename, ranker)
 	d.saveDesign outputFilename
 end
 
-create_space '../resources/src/junit-3.8.1'
+#abstract_ir '../resources/gxl/junit-3.8.1_l1.gxl',
+#		'out.gxl',
+#		'../resources/src/junit-3.8.1'
+
+File.open('vai.html', 'w') do |file|
+	html '../resources/src/junit-3.8.1', file
+end
