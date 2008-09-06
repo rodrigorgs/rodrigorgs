@@ -1,105 +1,93 @@
-\section{General Information}
+\section{Introdução} \label{sec:intro}
 
-All full papers and posters (short papers) submitted to some SBC conference,
-including any supporting documents, should be written in English or in
-Portuguese. The format paper should be A4 with single column, 3.5 cm for upper
-margin, 2.5 cm for bottom margin and 3.0 cm for lateral margins, without
-headers or footers. The main font must be Times, 12 point nominal size, with 6
-points of space before each paragraph. Page numbers must be suppressed.
+%\begin{table}[ht]
+%\centering
+%\caption{Variables to be considered on the evaluation of interaction
+%  techniques}
+%\label{tab:exTable1}
+%\includegraphics[width=.7\textwidth]{table.jpg}
+%\end{table}
 
-Full papers must respect the page limits defined by the conference.
-Conferences that publish just abstracts ask for \textbf{one}-page texts.
+O compartilhamento de recursos computacionais através de grids computacionais é útil porque permite que os recursos sejam melhor aproveitados. Tempo ocioso. O investimento é diluído entre domínios administrativos.
 
-\section{First Page} \label{sec:firstpage}
+Vamos falar agora de computação (vs. armazenamento, rede etc.). Em grids voluntárias [talvez o termo voluntárias não seja bom, confunde com folding@home] não há garantia de que os recursos serão obtidos. Com poucos recursos disponíveis as tarefas podem demorar mais do que o desejado, diminuindo a utilidade do resultado (sistemas de tempo real não crítico - ver função de utilidade).
 
-The first page must display the paper title, the name and address of the
-authors, the abstract in English and ``resumo'' in Portuguese (``resumos'' are
-required only for papers written in Portuguese). The title must be centered
-over the whole page, in 16 point boldface font and with 12 points of space
-before itself. Author names must be centered in 12 point font, bold, all of
-them disposed in the same line, separated by commas and with 12 points of
-space after the title. Addresses must be centered in 12 point font, also with
-12 points of space after the authors' names. E-mail addresses should be
-written using font Courier New, 10 point nominal size, with 6 points of space
-before and 6 points of space after.
+Por outro lado, existe utility computing, um modelo de negócio em que o usuário obtém recursos rapidamente (rapid provisioning, elastic computing) e paga pelo tempo de uso em um grão pequeno.
 
-The abstract and ``resumo'' (if is the case) must be in 12 point Times font,
-indented 0.8cm on both sides. The word \textbf{Abstract} and \textbf{Resumo},
-should be written in boldface and must precede the text.
+Tendo acesso a um provedor de utility computing, um usuário pode optar por gastar dinheiro alugando infra-estrutura a fim de completar suas tarefas em menos tempo. Com os middlewares atuais [cuidado!], o escalonamento de tarefas entre o grid e o provedor de utility deve ser feito pelo usuário.
 
-\section{CD-ROMs and Printed Proceedings}
+Este trabalho tem o intuito de avaliar as modificações necessárias em um middleware de grid, o OurGrid \cite{ougrid}, para habilitá-lo a um cenário híbrido, em que dispõe de recursos do grid e do provedor de utility computing, em particular o Amazon AWS (Amazon Web Services)
+(adaptações)
 
-In some conferences, the papers are published on CD-ROM while only the
-abstract is published in the printed Proceedings. In this case, authors are
-invited to prepare two final versions of the paper. One, complete, to be
-published on the CD and the other, containing only the first page, with
-abstract and ``resumo'' (for papers in Portuguese).
+\section{Utility Computing} \label{sec:utility}
 
-\section{Sections and Paragraphs}
+Utilizaremos aqui o Amazon AWS porque é barato, a adesão é fácil (basta dar o número do cartão de crédito) e a documentação é abundante. Nossa solução pode, no entanto, ser aplicada a qualquer serviço similar, como o AppNexus ou ....
 
-Section titles must be in boldface, 13pt, flush left. There should be an extra
-12 pt of space before each title. Section numbering is optional. The first
-paragraph of each section should not be indented, while the first lines of
-subsequent paragraphs should be indented by 1.27 cm.
+O Amazon possui um serviço denominado EC2 (Elastic Computing/er Cloud) em que o usuário pode executar instâncias de imagens de máquinas virtuais. As imagens são armazenadas no serviço Amazon S3 (Simple Storage Service). Existem imagens públicas armazenadas no S3 que podem ser usadas por qualquer usuário sem custo adicional.
 
-\subsection{Subsections}
+As instâncias podem ser m1.small, medium, large...
 
-The subsection titles must be in boldface, 12pt, flush left.
+Um usuário inicia instâncias através de uma interface programática, e em poucos minutos a instância está rodando. O encerramento de instâncias é feito da mesma forma. Cada usuário pode, a princípio, rodar até 20 instâncias de máquinas virtuais, mas o limite máximo pode ser negociado com o provedor.
 
-\section{Figures and Captions}\label{sec:figs}
+O serviço mede o tempo em que cada instância está ativa. O valor cobrado pela execução de uma instância é proporcional à quantidade de horas em que a instância está ativa (arredondado pra cima). 
 
+\section{OurGrid} \label{sec:ourgrid}
 
-Figure and table captions should be centered if less than one line
-(Figure~\ref{fig:exampleFig1}), otherwise justified and indented by 0.8cm on
-both margins, as shown in Figure~\ref{fig:exampleFig2}. The caption font must
-be Helvetica, 10 point, boldface, with 6 points of space before and after each
-caption.
+O OurGrid é um middleware de grid para bag-of-tasks, ou seja, tarefas que podem ser executadas independentemente, sem comunicação entre as tarefas.
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=.5\textwidth]{fig1.jpg}
-\caption{A typical figure}
-\label{fig:exampleFig1}
-\end{figure}
+O OurGrid funciona como uma rede de favores para combater free riders.
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=.3\textwidth]{fig2.jpg}
-\caption{This figure is an example of a figure caption taking more than one
-  line and justified considering margins mentioned in Section~\ref{sec:figs}.}
-\label{fig:exampleFig2}
-\end{figure}
+Comunicação é feita com XMPP. Cada componente possui um par de chaves
 
-In tables, try to avoid the use of colored or shaded backgrounds, and avoid
-thick, doubled, or unnecessary framing lines. When reporting empirical data,
-do not use more decimal digits than warranted by their precision and
-reproducibility. Table caption must be placed before the table (see Table 1)
-and the font used must also be Helvetica, 10 point, boldface, with 6 points of
-space before and after each caption.
+Arquitetura formada por Broker, Worker, Peer.
+[figura]
 
-\begin{table}[ht]
-\centering
-\caption{Variables to be considered on the evaluation of interaction
-  techniques}
-\label{tab:exTable1}
-\includegraphics[width=.7\textwidth]{table.jpg}
-\end{table}
+\section{Proposta (requisitos)} \label{sec:proposta}
 
-\section{Images}
+R1 Usar recursos do provedor não deve ser mais difícil do que usar recursos da grade. Usar recursos do provedor e da grade, simultaneamente, deve ser igualmente fácil.
+R2 O usuário deve ter controle sobre a execução das instâncias, a fim de ter controle sobre o dinheiro gasto. O objetivo aqui é minimizar o tempo da tarefa sujeito a restrições financeiras. (Outra possibilidade, aqui não abordada, é minimizar o gasto sujeito a restrições de tempo, o que caracterizaria um sistema de tempo real rígido)
 
-All images and illustrations should be in black-and-white, or gray tones,
-excepting for the papers that will be electronically available (on CD-ROMs,
-internet, etc.). The image resolution on paper should be about 600 dpi for
-black-and-white images, and 150-300 dpi for grayscale images.  Do not include
-images with excessive resolution, as they may take hours to print, without any
-visible difference in the result. 
+(Naturalmente R2 contradiz R1, porque exige uma intervenção a mais do usuário)
 
-\section{References}
+\section{Design e Implementação} \label{sec:design}
 
-Bibliographic references must be unambiguous and uniform.  We recommend giving
-the author names references in brackets, e.g. \cite{knuth:84},
-\cite{boulic:91}, and \cite{smith:99}.
+Broker solicita N instâncias por no máximo H horas (de forma a estabelecer um limite no dinheiro gasto)
+Cada instância possui um Worker.
+Uma das instâncias possui um Peer?
+Broker ganha a habilidade de instanciar Workers diretamente, sem precisar solicitar a um Peer?
+Worker vanilla.
+Ao fim do processamento, o Broker doa a instância para um Peer pelo tempo que resta do crédito já pago?
 
-The references must be listed using 12 point font size, with 6 points of space
-before each reference. The first line of each reference should not be
-indented, while the subsequent should be indented by 0.5 cm.
+-- Considerações
+
+É seguro?
+É eficiente? (financeiramente)
+
+Naturalmente a política de solicitação de recursos que o Broker utiliza será diferente quando um provedor de utility está envolvido. Pode não ser vantajoso solicitar 20 instâncias para usar durante 15 min, já que o valor cobrado dá direito a 1 hora de uso.
+
+\section{Avaliação / Experiência} \label{sec:avaliacao}
+
+Experimentamos com instâncias m1.small.
+
+Tempo até a tarefa terminar = tempo de espera + tempo de execução + tempo de transferência do resultado (se bem que o resultado pode ser armazenado no S3, a transferência é rápida)
+
+Nossos experimentos avaliaram que o tempo de espera é de, em média, X minutos. Acreditamos que esse tempo pode ser reduzido se criarmos uma instalação de Linux mais enxuta.
+
+overhead
+
+\section{Trabalhos Relacionados} \label{sec:trabrel}
+
+Hadoop
+% http://wiki.apache.org/hadoop/AmazonEC2
+% http://developer.amazonwebservices.com/connect/entry.jspa?externalID=873
+
+GridGain
+% http://blog.griddynamics.com/2008/07/gridgain-on-ec2.html
+
+Globus Science Cloud
+% http://workspace.globus.org/clouds/
+
+\section{Conclusão} \label{sec:conclusao}
+
+Implementar algoritmos de escalonamento que levem em consideração o fator custo financeiro.
+Avaliar cenários em que vários Brokers querem compartilhar recursos do provedor de utility (maior utilização do recurso já pago, conta rachada)?
