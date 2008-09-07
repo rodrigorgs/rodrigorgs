@@ -1,0 +1,9 @@
+job : 
+label 	: SimpleJob
+
+task :
+init 	: put FindNumber.class FindNumber.class
+remote 	: nice java -cp . FindNumber 3 261147332 6819792792357414911 output-$JOB.$TASK
+final   : get output-$JOB.$TASK output-$JOB.$TASK
+
+
