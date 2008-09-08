@@ -1,5 +1,7 @@
 \section{Introdução} \label{sec:intro}
 
+% Qualquer coisa após um sinal de porcento é comentário.
+
 %\begin{table}[ht]
 %\centering
 %\caption{Variables to be considered on the evaluation of interaction
@@ -45,7 +47,8 @@ Arquitetura formada por Broker, Worker, Peer.
 \section{Proposta (requisitos)} \label{sec:proposta}
 
 R1 Usar recursos do provedor não deve ser mais difícil do que usar recursos da grade. Usar recursos do provedor e da grade, simultaneamente, deve ser igualmente fácil.
-R2 O usuário deve ter controle sobre a execução das instâncias, a fim de ter controle sobre o dinheiro gasto. O objetivo aqui é minimizar o tempo da tarefa sujeito a restrições financeiras. (Outra possibilidade, aqui não abordada, é minimizar o gasto sujeito a restrições de tempo, o que caracterizaria um sistema de tempo real rígido)
+R2 O usuário deve ter controle sobre a execução das instâncias, a fim de ter controle sobre o dinheiro gasto. O objetivo aqui é minimizar o tempo da tarefa sujeito a restrições financeiras. (Outra possibilidade, aqui não abordada, é minimizar o gasto sujeito a restrições de tempo, o que caracterizaria um sistema de tempo real rígido) % rever isso
+R3 Uma tarefa em execução deve poder usar instâncias iniciadas após o início da tarefa.
 
 (Naturalmente R2 contradiz R1, porque exige uma intervenção a mais do usuário)
 
@@ -58,6 +61,8 @@ Broker ganha a habilidade de instanciar Workers diretamente, sem precisar solici
 Worker vanilla.
 Ao fim do processamento, o Broker doa a instância para um Peer pelo tempo que resta do crédito já pago?
 
+Configuração: o que um usuário precisa configurar para começar a usar OurGrid + EC2?
+
 -- Considerações
 
 É seguro?
@@ -69,11 +74,18 @@ Naturalmente a política de solicitação de recursos que o Broker utiliza será dif
 
 Experimentamos com instâncias m1.small.
 
-Tempo até a tarefa terminar = tempo de espera + tempo de execução + tempo de transferência do resultado (se bem que o resultado pode ser armazenado no S3, a transferência é rápida)
+Tempo até a tarefa terminar = tempo de espera + tempo de execução + tempo de transferência do resultado.
 
 Nossos experimentos avaliaram que o tempo de espera é de, em média, X minutos. Acreditamos que esse tempo pode ser reduzido se criarmos uma instalação de Linux mais enxuta.
 
-overhead
+Medidas:
+- Speedup: Usando X máquinas, gastamos quantas vezes menos tempo? Comparar speedup em rede local e speed up na Amazon.
+- Desempenho individual: máquina da Amazon é quantas vezes mais lenta que uma máquina normal?
+
+Tarefas para experimentação:
+- Tarefas CPU-intensivas
+- Tarefas I/O-intensivas
+- Tarefas rede-intensivas
 
 \section{Trabalhos Relacionados} \label{sec:trabrel}
 
