@@ -103,6 +103,7 @@ class Document
 		freq = Hash.new(0)
 		words = text.split(/[^A-Za-z]/).map {|x| x.downcase}.
 			select { |x| !x.empty? }
+		# TODO: normalize words, ignore stop words
 		words.each do |w| freq[w] += 1 end
 		return freq
 	end
