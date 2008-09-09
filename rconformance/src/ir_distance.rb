@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# TODO: consider using http://code.google.com/p/ir-themis/
+
 require 'set'
 
 
