@@ -16,15 +16,17 @@ def list_of_packages(srcpath)
 	packages = Set.new
 
 	Dir.glob("#{srcpath}/**/*.java") do |file|
-		IO.readlines(file).grep(/package (.*);/) { packages.add $1 }
+		IO.readlines(file).grep(/^package (.+);/) { packages.add $1 }
 	end
+
+	p packages.to_a
 
 	return packages.to_a
 end
 
 def create_space(srcpath)
 	packages = list_of_packages(srcpath)
-	params = ['-sourcepath', srcpath, 
+	params = ['-sourcepath', srcpath, '-quiet',
 			'-doclet', 'DummyDoclet', 
 			'-docletpath', '.'] + packages
 	Java::ComSunToolsJavadoc::Main.execute(params.to_java :string)
@@ -127,5 +129,5 @@ end
 #		'../resources/src/junit-3.8.1'
 
 File.open('vai.html', 'w') do |file|
-	html '../resources/src/junit-3.8.1', file
+	html '../resources/src/javaparser-1.0.3/src', file
 end
