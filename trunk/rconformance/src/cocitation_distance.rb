@@ -33,13 +33,16 @@ class CodeSearchEntry
 	end
 end
 
-def search(query)
+def search(query, maxresults=nil)
 	service = CodeSearchService.new("exampleCo-example1")
 	feedUrl = Java::JavaNet::URL.new("http://www.google.com/codesearch/feeds/search?q=#{URI.escape(query)}")
+	count = 0
 	while true
 		res = service.getFeed feedUrl, CodeSearchFeed.java_class
 		res.getEntries.each do |e|
 			yield e
+			count += 1
+			return if (!maxresults.nil? && count == maxresults)
 		end
 		nextLink = res.getNextLink
 		if nextLink.nil?
@@ -51,12 +54,9 @@ def search(query)
 end
 
 def main
-	i = 0
-	search "// TODO" do |entry|
+	search("// TODO", 2) do |entry|
 		puts entry.getFile.getName
 		puts entry.code
-		i += 1
-		break if i >= 3
 	end
 end
 
