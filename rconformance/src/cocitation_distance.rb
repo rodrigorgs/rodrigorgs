@@ -2,8 +2,7 @@ require 'java'
 
 import 'com.google.gdata.client.codesearch.CodeSearchService'
 import 'com.google.gdata.data.codesearch.CodeSearchFeed'
-import 'com.google.gdata.util.common.xml.XmlWriter'
-import 'java.io.PrintWriter'
+import 'com.google.gdata.data.codesearch.CodeSearchEntry'
 
 require 'net/http'
 require 'uri'
@@ -28,15 +27,37 @@ def get_code(codeUrl)
 	return ret
 end
 
-query = "objectweb"
+class CodeSearchEntry
+	def code
+		get_code self.getHtmlLink.getHref
+	end
+end
 
-service = CodeSearchService.new("exampleCo-example1")
-feedUrl = Java::JavaNet::URL.new("http://www.google.com/codesearch/feeds/search?q=#{query}") # TODO: URI.escape
+def search(query)
+	service = CodeSearchService.new("exampleCo-example1")
+	feedUrl = Java::JavaNet::URL.new("http://www.google.com/codesearch/feeds/search?q=#{URI.escape(query)}")
+	while true
+		res = service.getFeed feedUrl, CodeSearchFeed.java_class
+		res.getEntries.each do |e|
+			yield e
+		end
+		nextLink = res.getNextLink
+		if nextLink.nil?
+			break
+		else
+			feedUrl = service.getFeed nextLink.getHref, CodeSearchFeed.java_class
+		end
+	end
+end
 
-res = service.getFeed feedUrl, CodeSearchFeed.java_class
-e = res.getEntries[0]
+def main
+	i = 0
+	search "// TODO" do |entry|
+		puts entry.getFile.getName
+		puts entry.code
+		i += 1
+		break if i >= 3
+	end
+end
 
-puts e.getFile.getName
-
-codeUrl = res.getEntries[0].getHtmlLink.getHref
-puts get_code(codeUrl)
+main
