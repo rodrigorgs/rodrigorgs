@@ -18,31 +18,71 @@ Por outro lado, existe utility computing, um modelo de negócio em que o usuário 
 
 Tendo acesso a um provedor de utility computing, um usuário pode optar por gastar dinheiro alugando infra-estrutura a fim de completar suas tarefas em menos tempo. Com os middlewares atuais [cuidado!], o escalonamento de tarefas entre o grid e o provedor de utility deve ser feito pelo usuário.
 
-Este trabalho tem o intuito de avaliar as modificações necessárias em um middleware de grid, o OurGrid \cite{ougrid}, para habilitá-lo a um cenário híbrido, em que dispõe de recursos do grid e do provedor de utility computing, em particular o Amazon AWS (Amazon Web Services)
+Este trabalho tem o intuito de avaliar as modificações necessárias em um middleware de grid, o OurGrid \cite{ougrid:unite}, para habilitá-lo a um cenário híbrido, em que dispõe de recursos do grid e do provedor de utility computing, em particular o Amazon AWS (Amazon Web Services)
 (adaptações)
 
-\section{Utility Computing} \label{sec:utility}
+\section{Amazon Web Services} \label{sec:amazon}
 
-Utilizaremos aqui o Amazon AWS porque é barato, a adesão é fácil (basta dar o número do cartão de crédito) e a documentação é abundante. Nossa solução pode, no entanto, ser aplicada a qualquer serviço similar, como o AppNexus ou ....
+O \emph{Amazon Web Services} (AWS) é um conjunto de serviços que conecta diretamente desenvolvedores a plataforma tecnológica da Amazon. O \emph{Amazon Elastic Compute Cloud} (Amazon EC2) é um \emph{Web Service} que provê uma infra-estrutura computacional ajustável na nuvem, que permite o controle dos recursos computacionais, desde a instanciação (ver Tabela \ref{tab:ec2}) ao gerenciamento de capacidades \cite{ec2}. A escalabilidade dessa infra-estrutura está relacionada à virtualização do ambiente computacional. Cada ambiente virtual é representado por uma imagem (\emph{Amazon Machine Image} -- AMI) que pode ser criada pelo desenvolvedor, contendo suas aplicações, bibliotecas, dados e configurações, ou pode ser utilizado uma das imagens pré-configuradas que podem ser utilizadas sem nenhum custo adicional. Todas as imagens são armazenadas no \emph{Amazon Simple Storage Service} (Amazon S3), um serviço de armazenamento para a \emph{Internet}, através de \emph{Web Services}, que provêem armazenamento de volume de dados \cite{s3}.
 
-O Amazon possui um serviço denominado EC2 (Elastic Computing/er Cloud) em que o usuário pode executar instâncias de imagens de máquinas virtuais. As imagens são armazenadas no serviço Amazon S3 (Simple Storage Service). Existem imagens públicas armazenadas no S3 que podem ser usadas por qualquer usuário sem custo adicional.
+\small
+\begin{table}[ht] \label{tab:ec2}
+\caption{Instâncias de servidores Amazon EC2 \cite{ec2}}
+\centering
+\begin{tabular}{|l c c c c|}
+\hline
+\textbf{Instância} & \textbf{Memória (GB)} & \textbf{Unidades Computacionais (EC2)} & \textbf{Armazenamento (GB)} & \textbf{Plataforma (bits)} \\
+\textbf{Standard} & - & - & - & - \\
+\qquad Small & 1.7 & 1 (1 núcleo virtual) & 160 & 32 \\
+\qquad Large & 7.5 & 4 (2 núcleos virtuais) & 850 & 64 \\
+\qquad Extra & 15 & 8 (4 núcleos virtuais) & 1690 & 64 \\
 
-As instâncias podem ser m1.small, medium, large...
+\textbf{High-CPU} & - & - & - & - \\
+\qquad Medium & 1.7 & 5 (2 núcleos virtuais) & 350 & 32 \\
+\qquad Extra Large & 7 & 20 (8 núcleos virtuais) & 1690 & 64 \\
+\hline
+\end{tabular}
+% tabela
+\end{table}
 
-Um usuário inicia instâncias através de uma interface programática, e em poucos minutos a instância está rodando. O encerramento de instâncias é feito da mesma forma. Cada usuário pode, a princípio, rodar até 20 instâncias de máquinas virtuais, mas o limite máximo pode ser negociado com o provedor.
+Um usuário inicia as instâncias através de uma interface programática (API), e em poucos minutos a instância se encontra em execução. O encerramento de instâncias é realizado da mesma forma. A princípio, cada usuário pode executar até vinte instâncias de máquinas virtuais ao mesmo tempo, mas o limite máximo pode ser negociado com o provedor. A contabilização do serviço é proporcional ao tempo (quantidade de horas) que uma instância está ativa (arredondando para cima), ou seja, se um usuário utilizar uma instância por meia hora, irá lhe custar o equivalente a uma hora de uso.
 
-O serviço mede o tempo em que cada instância está ativa. O valor cobrado pela execução de uma instância é proporcional à quantidade de horas em que a instância está ativa (arredondado pra cima). 
+%Utilizaremos aqui o Amazon AWS porque é barato, a adesão é fácil (basta dar o número do cartão de crédito) e a documentação é abundante. Nossa solução pode, no entanto, ser aplicada a qualquer serviço similar, como o AppNexus ou ....
+
+%O Amazon possui um serviço denominado EC2 (Elastic Computing/er Cloud) em que o usuário pode executar instâncias de imagens de máquinas virtuais. As imagens são armazenadas no serviço Amazon S3 (Simple Storage Service). Existem imagens públicas armazenadas no S3 que podem ser usadas por qualquer usuário sem custo adicional.
+
+%As instâncias podem ser m1.small, medium, large...
+
+%Um usuário inicia instâncias através de uma interface programática, e em poucos minutos a instância está rodando. O encerramento de instâncias é feito da mesma forma. Cada usuário pode, a princípio, rodar até 20 instâncias de máquinas virtuais, mas o limite máximo pode ser negociado com o provedor.
+
+%O serviço mede o tempo em que cada instância está ativa. O valor cobrado pela execução de uma instância é proporcional à quantidade de horas em que a instância está ativa (arredondado pra cima). 
 
 \section{OurGrid} \label{sec:ourgrid}
 
-O OurGrid é um middleware de grid para bag-of-tasks, ou seja, tarefas que podem ser executadas independentemente, sem comunicação entre as tarefas.
+OurGrid
 
-O OurGrid funciona como uma rede de favores para combater free riders.
+O OurGrid é uma grade computacional entre-pares cooperativa, aberta e de fácil implantação, onde os participantes compartilham recursos ociosos de processamento e armazenamento de dados, para a execução de aplicações que possuam tarefas independentes, i.e., aplicações \emph{Bag-of-Tasks (BoT)} \cite{ourgrid:unite}.
 
-Comunicação é feita com XMPP. Cada componente possui um par de chaves
+A Figura \ref{fig:ourgrid:arquitetura} apresenta a arquitetura do OurGrid com seus quatro componentes principais: o \emph{Broker}, que é uma interface cliente de submissão de tarefas; o \emph{Peer}, entidade que agrupa consumidores e recursos de um domínio, controlando a doação e requisição de máquinas; o \emph{Worker}, recurso executor das tarefas repassadas pelo usuário; e o \emph{Discovery Service}, um serviço de descoberta de recursos disponíveis na grade \cite{ourgrid:portifolio}. A comunicação entre os quatro componentes é realizada através do Commune, um \emph{middleware} que utiliza o protocolo XMPP (\emph{Extensible Messaging and Presence Protocol}) para troca de informações. 
+% portifolio = figueiredo 2008
 
-Arquitetura formada por Broker, Worker, Peer.
-[figura]
+\begin{figure}[ht] \label{fig:ourgrid:arquitetura}
+\caption{Arquitetura do OurGrid}
+\centering
+\includegraphics[width=1\textwidth]{arquitetura_ourgrid}
+\end{figure}
+
+O OurGrid possui uma rede de favores (\emph{Network of Favors -- NoF}) \cite{ourgrid:ABCM07}, que é um mecanismo de incentivo para a troca de recursos computacionais que desencoraja \emph{free riding}, através de mecanismos de alocação de recursos baseados na reputação de um \emph{Peer}, ou seja, cada \emph{Peer} contabiliza o consumo e doação de recursos a outros \emph{Peers} da grade. A unicidade de cada \emph{Peer} é garantida através da utilização de autenticação baseada em chave pública, gerada a partir de um par de chaves assimétricas \cite{ourgrid:portifolio}, ou através do uso de certificados no padrão X.509 PKI (\emph{Public Key Infrastructure}) \cite{itut}.
+% [ITU-T 2005]
+
+%O OurGrid é um middleware de grid para bag-of-tasks, ou seja, tarefas que podem ser executadas independentemente, sem comunicação entre as tarefas.
+
+%O OurGrid funciona como uma rede de favores para combater free riders.
+
+%Comunicação é feita com XMPP. Cada componente possui um par de chaves
+
+%Arquitetura formada por Broker, Worker, Peer.
+%[figura]
 
 \section{Proposta (requisitos)} \label{sec:proposta}
 
