@@ -1,14 +1,8 @@
+\newcommand{\worker}{\emph{Worker}}
+\newcommand{\peer}{\emph{Peer}}
+\newcommand{\broker}{\emph{Broker}}
+
 \section{Introdução} \label{sec:intro}
-
-% Qualquer coisa após um sinal de porcento é comentário.
-
-%\begin{table}[ht]
-%\centering
-%\caption{Variables to be considered on the evaluation of interaction
-%  techniques}
-%\label{tab:exTable1}
-%\includegraphics[width=.7\textwidth]{table.jpg}
-%\end{table}
 
 O compartilhamento de recursos computacionais através de grids computacionais é útil porque permite que os recursos sejam melhor aproveitados. Tempo ocioso. O investimento é diluído entre domínios administrativos.
 
@@ -18,7 +12,7 @@ Por outro lado, existe utility computing, um modelo de negócio em que o usuário 
 
 Tendo acesso a um provedor de utility computing, um usuário pode optar por gastar dinheiro alugando infra-estrutura a fim de completar suas tarefas em menos tempo. Com os middlewares atuais [cuidado!], o escalonamento de tarefas entre o grid e o provedor de utility deve ser feito pelo usuário.
 
-Este trabalho tem o intuito de avaliar as modificações necessárias em um middleware de grid, o OurGrid \cite{ougrid:unite}, para habilitá-lo a um cenário híbrido, em que dispõe de recursos do grid e do provedor de utility computing, em particular o Amazon AWS (Amazon Web Services)
+Este trabalho tem o intuito de avaliar as modificações necessárias em um middleware de grid, o OurGrid \cite{ougrid:unite}, para habilitá-lo a um cenário híbrido, em que dispõe de recursos do grid e do provedor de cloud computing, em particular o Amazon AWS (Amazon Web Services)
 (adaptações)
 
 \section{Amazon Web Services} \label{sec:amazon}
@@ -31,7 +25,9 @@ O \emph{Amazon Web Services} (AWS) é um conjunto de serviços que conecta diretam
 \centering
 \begin{tabular}{|l c c c c|}
 \hline
-\textbf{Instância} & \textbf{Memória (GB)} & \textbf{Unidades Computacionais (EC2)} & \textbf{Armazenamento (GB)} & \textbf{Plataforma (bits)} \\
+\multicolumn{1}{|c}{\textbf{Instância}} & \textbf{Memória} & \textbf{Unidades} & \textbf{Armazenamento} & \textbf{Plataforma} \\
+ & \textbf{(GB)}& \textbf{Computacionais (GB)} & \textbf{(GB)} & \textbf{(bits)}\\
+\hline
 \textbf{Standard} & - & - & - & - \\
 \qquad Small & 1.7 & 1 (1 núcleo virtual) & 160 & 32 \\
 \qquad Large & 7.5 & 4 (2 núcleos virtuais) & 850 & 64 \\
@@ -58,8 +54,6 @@ Um usuário inicia as instâncias através de uma interface programática (API), e e
 %O serviço mede o tempo em que cada instância está ativa. O valor cobrado pela execução de uma instância é proporcional à quantidade de horas em que a instância está ativa (arredondado pra cima). 
 
 \section{OurGrid} \label{sec:ourgrid}
-
-OurGrid
 
 O OurGrid é uma grade computacional entre-pares cooperativa, aberta e de fácil implantação, onde os participantes compartilham recursos ociosos de processamento e armazenamento de dados, para a execução de aplicações que possuam tarefas independentes, i.e., aplicações \emph{Bag-of-Tasks (BoT)} \cite{ourgrid:unite}.
 
@@ -94,21 +88,51 @@ R3 Uma tarefa em execução deve poder usar instâncias iniciadas após o início da 
 
 \section{Design e Implementação} \label{sec:design}
 
-Broker solicita N instâncias por no máximo H horas (de forma a estabelecer um limite no dinheiro gasto)
-Cada instância possui um Worker.
-Uma das instâncias possui um Peer?
-Broker ganha a habilidade de instanciar Workers diretamente, sem precisar solicitar a um Peer?
-Worker vanilla.
-Ao fim do processamento, o Broker doa a instância para um Peer pelo tempo que resta do crédito já pago?
+Proposta: instâncias no EC2 podem ser compartilhadas com a comunidade durante o tempo restante já pago.
 
-Configuração: o que um usuário precisa configurar para começar a usar OurGrid + EC2?
+Consideramos o caso em que cada domínio administrativo possui uma conta no EC2 da qual seus usuários usufruem. A solução está no \peer.
+Naturalmente, um usuário que queira usar sua própria conta no EC2 pode fazê-lo desde que configure um \peer\ para uso próprio.
 
--- Considerações
+\begin{figure}[ht] \label{fig:ourgrid:arquitetura}
+\caption{Arquitetura do OurGrid com suporte a Amazon Web Services}
+\centering
+\includegraphics[width=.72\textwidth]{arquitetura_ourgrid_amazon}
+\end{figure}
 
-É seguro?
-É eficiente? (financeiramente)
+Consideramos dois cenários de uso na criação de instâncias do EC2. No primeiro cenário, a conta do Amazon EC2 está associada a um domínio administrativo e o pagamento pelo serviço é responsabilidade dos administradores do domínio. Os administradores podem implementar alguma política para controlar o número de instâncias que cada usuário pode criar. Esse cenário faz sentido em grupos de pesquisa ou empresas em que haja uma relação de confiança entre as pessoas.
 
-Naturalmente a política de solicitação de recursos que o Broker utiliza será diferente quando um provedor de utility está envolvido. Pode não ser vantajoso solicitar 20 instâncias para usar durante 15 min, já que o valor cobrado dá direito a 1 hora de uso.
+No segundo cenário, cada usuário que deseje usar o EC2 possui uma conta no serviço e paga pelo seu uso. 
+
+A solução para os dois cenários é a mesma: fazer o Peer ser responsável por criar instâncias no EC2. No segundo cenário, o usuário deve instalar e configurar um Peer para uso próprio.
+
+Foi criada uma AMI contendo um \worker\ do OurGrid. Como esse \worker\ será executado em uma máquina virtual, ele foi configurado para executar as tarefas no sistema operacional (normalmente ele cria uma máquina virtual).
+
+Peer registra que o Broker que solicitou a criação das instâncias tem exclusividade sobre elas.
+
+Ao executar uma instância no EC2, o Peer passa como parâmetro de inicialização da instância a configuração do Worker, composta por seu nome de usuário, senha, o endereço e a chave pública do Peer.
+
+Quantas instâncias são levantadas? Quem controla isso?
+
+Segurança:
+O root cria um cron job que desliga a instância após uma hora.
+Isso evita que a instância fique executando indefinidamente no caso de a rede local cair.
+O Worker EC2 é executado como um usuário posix sem privilégios.
+
+%Broker solicita N instâncias por no máximo H horas (de forma a estabelecer um limite no dinheiro gasto)
+%Cada instância possui um Worker.
+%Uma das instâncias possui um Peer?
+%Broker ganha a habilidade de instanciar Workers diretamente, sem precisar solicitar a um Peer?
+%Worker vanilla.
+%Ao fim do processamento, o Broker doa a instância para um Peer pelo tempo que resta do crédito já pago?
+%
+%Configuração: o que um usuário precisa configurar para começar a usar OurGrid + EC2?
+%
+%-- Considerações
+%
+%É seguro?
+%É eficiente? (financeiramente)
+%
+%Naturalmente a política de solicitação de recursos que o Broker utiliza será diferente quando um provedor de utility está envolvido. Pode não ser vantajoso solicitar 20 instâncias para usar durante 15 min, já que o valor cobrado dá direito a 1 hora de uso.
 
 \section{Avaliação / Experiência} \label{sec:avaliacao}
 
@@ -127,18 +151,18 @@ Tarefas para experimentação:
 - Tarefas I/O-intensivas
 - Tarefas rede-intensivas
 
-\section{Trabalhos Relacionados} \label{sec:trabrel}
-
-Hadoop
-% http://wiki.apache.org/hadoop/AmazonEC2
-% http://developer.amazonwebservices.com/connect/entry.jspa?externalID=873
-
-GridGain
-% http://blog.griddynamics.com/2008/07/gridgain-on-ec2.html
-
-Globus Science Cloud
-% http://workspace.globus.org/clouds/
-
+%\section{Trabalhos Relacionados} \label{sec:trabrel}
+%
+%Hadoop
+%% http://wiki.apache.org/hadoop/AmazonEC2
+%% http://developer.amazonwebservices.com/connect/entry.jspa?externalID=873
+%
+%GridGain
+%% http://blog.griddynamics.com/2008/07/gridgain-on-ec2.html
+%
+%Globus Science Cloud
+%% http://workspace.globus.org/clouds/
+%
 \section{Conclusão} \label{sec:conclusao}
 
 Implementar algoritmos de escalonamento que levem em consideração o fator custo financeiro.
