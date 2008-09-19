@@ -4,58 +4,64 @@ require 'java'
 import 'abstractor.util.FileUtilities'
 import 'edu.uci.ics.jung.graph.Graph'
 import 'design.model.Design'
-import 'abstractor.cluster.ClusterFacade'
 
-import 'abstractor.cluster.ContainerClusterer'
-import 'abstractor.cluster.DerivedEdgeBetweennessClusterer'
-import 'abstractor.cluster.DerivedKMeansClusterer'
-import 'abstractor.cluster.DerivedVoltageClusterer'
-import 'abstractor.cluster.DerivedWeakComponentClusterer'
-import 'abstractor.cluster.EdgeCollapser'
-import 'abstractor.cluster.GeneralClusterer'
-import 'abstractor.cluster.RegexClusterer'
-import 'abstractor.cluster.dsm.DSMClusterer'
-import 'abstractor.cluster.mq.MQClusterer'
-
-$clusterers = {'container' => ContainerClusterer,
-	'modularizationquality' => MQClusterer,
-	'dsm' => DSMClusterer,
-	'edgebetweenness' => DerivedEdgeBetweennessClusterer,
-	'kmeans' => DerivedEdgeBetweennessClusterer,
-	'regularexpressions' => RegexClusterer,
-	'voltage' => DerivedVoltageClusterer,
-	'weakcomponent' => DerivedWeakComponentClusterer}
-
-
-def abstract(propFilename, inputFilename, outputFilename, args)
+def abstract(clusterer, inputFilename, outputFilename, params)
 	puts "Loading design..."
 	d = Design.new inputFilename
 	puts "Done"
 
-	props = FileUtilities.loadProperties(propFilename)
+	if params[:propfile]
+		props = FileUtilities.loadProperties(params[:propfile])
+		params.delete :propfile
+	else
+		props = Java::JavaUtil::Properties.new
+		props.setProperty 'verboseMode', 'false'
+		props.setProperty 'keepInternal', 'false'
+		props.setProperty 'keepUnclustered', 'false'
+		props.setProperty 'edgeType', 'simple'
+	end
+	params.each_pair { |k,v| props.setProperty(k.to_s, v.to_s) }
 
-	puts "Levels: from 0 to #{d.size - 1}"
-	graph = d.getGraph(args["level"] || d.size - 1)
+	graph = d.getGraph
 
-	ctype = props.getProperty("clustererType").downcase
-	clusterer = $clusterers[ctype].new(graph, props)
+	if clusterer.kind_of? String
+		import clusterer
+		classname = clusterer.split('.')[-1]
+		clusterer = eval "#{classname}.new(graph, props)"
 
-	d.addGraph(clusterer.getClusteredDesign);
+		#klass = Java::JavaClass.for_name(clusterer)
+		#clusterer = klass.new(graph, props)
+	#elsif clusterer.kind_of? Class
+	#	clusterer = clusterer.new(graph, props)
+	end
+
+	#ctype = props.getProperty("clustererType").downcase
+	#clusterer = $clusterers[ctype].new(graph, props)
+
+	d.addGraph(clusterer.getClusteredDesign)
 
 	d.saveDesign outputFilename
 end
 
-propFilename = ARGV.shift
-inputFilename = ARGV.shift
-outputFilename = ARGV.shift
-args = Hash.new
-
-while !ARGV.empty?
-	case ARGV.shift
-		when '-level'
-			args["level"] = ARGV.shift.to_i
-	end
+def help_and_exit
+	puts "Usage:"
+	puts "  #{$0} clusterer inputFilename outputFilename args"
+	puts
+	puts "Example:"
+	puts "  #{$0} abstractor.cluster.DerivedEdgeBetweennessClusterer jedit_l1.gxl jedit_l2.gxl '{:numEdgesToRemove => 20}'"
+	puts
+	exit 1
 end
 
-abstract propFilename, inputFilename, outputFilename, args
+if __FILE__ == $0
+	#propFilename = ARGV.shift
+	help_and_exit if ARGV.size < 4
+
+	clusterer = ARGV.shift
+	inputFilename = ARGV.shift
+	outputFilename = ARGV.shift
+	args = if ARGV.empty? then Hash.new else eval(ARGV[0]) end
+
+	abstract clusterer, inputFilename, outputFilename, args
+end
 
