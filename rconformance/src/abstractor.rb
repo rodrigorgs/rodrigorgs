@@ -41,6 +41,8 @@ def abstract(clusterer, inputFilename, outputFilename, params)
 	d.addGraph(clusterer.getClusteredDesign)
 
 	d.saveDesign outputFilename
+
+	return {:design => d, :clusterer => clusterer}
 end
 
 def help_and_exit
