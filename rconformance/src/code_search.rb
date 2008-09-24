@@ -33,31 +33,47 @@ class CodeSearchEntry
 	end
 end
 
-def search(query, maxresults=nil)
+STOP_SEARCH = 'Please stop searching!'
+
+# FIXME: can't return more than 10 results
+# TODO: handle server error
+def code_search(query, &block)
 	service = CodeSearchService.new("exampleCo-example1")
 	feedUrl = Java::JavaNet::URL.new("http://www.google.com/codesearch/feeds/search?q=#{URI.escape(query)}")
 	count = 0
-	while true
-		res = service.getFeed feedUrl, CodeSearchFeed.java_class
+	res = service.getFeed feedUrl, CodeSearchFeed.java_class
+	results_count = res.getTotalResults
+
+	while !block.nil?
 		res.getEntries.each do |e|
-			yield e
 			count += 1
-			return if (!maxresults.nil? && count == maxresults)
+			r = block.call e, count
+			return results_count if r == STOP_SEARCH
 		end
 		nextLink = res.getNextLink
 		if nextLink.nil?
 			break
 		else
+			# FIXME: exception here
 			feedUrl = service.getFeed nextLink.getHref, CodeSearchFeed.java_class
+			res = service.getFeed feedUrl, CodeSearchFeed.java_class
 		end
 	end
+
+	return results_count
 end
 
 def main
-	search("// TODO", 2) do |entry|
-		puts entry.getFile.getName
-		puts entry.code
+	r = code_search("// TODO") do |entry, i|
+		puts "#{i}: #{entry.getFile.getName}"
+		#puts entry.code
+		STOP_SEARCH if i == 2
 	end
+	
+	puts "Total results: #{r}"
 end
 
-main
+if __FILE__ == $0
+	main
+end
+
