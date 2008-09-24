@@ -36,9 +36,10 @@ end
 STOP_SEARCH = 'Please stop searching!'
 
 # FIXME: can't return more than 10 results
-# TODO: handle server error
+# TODO: handle server error (error 500)
 def code_search(query, &block)
 	service = CodeSearchService.new("exampleCo-example1")
+	# TODO: use Query (from gdata API) instead of constructing a query string
 	feedUrl = Java::JavaNet::URL.new("http://www.google.com/codesearch/feeds/search?q=#{URI.escape(query)}")
 	count = 0
 	res = service.getFeed feedUrl, CodeSearchFeed.java_class
