@@ -63,7 +63,7 @@ def abstract(propFilename, inputFilename, outputFilename, args=nil)
 	#d.saveDesign outputFilename
 end
 
-abstract '/tmp/classcluster.properties', ARGV[0], ARGV[1]
+#abstract '/tmp/classcluster.properties', ARGV[0], ARGV[1]
 #propFilename = ARGV.shift
 #inputFilename = ARGV.shift
 #outputFilename = ARGV.shift
