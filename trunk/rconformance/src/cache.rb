@@ -11,10 +11,10 @@ CACHE_IDENTITY = lambda {|x| x}
 def cache(function, dir, filename, to_string, to_value)
 	path = "#{dir}/#{filename}"
 	if File.exists? path
-		puts "Getting value from cache"
+		#puts "Getting value from cache"
 		return to_value.call IO.read(path)
 	else
-		puts "Computing value"
+		#puts "Computing value"
 		ret = function.call
 		File.open(path, 'w') { |f| f.write to_string.call(ret) }
 		return ret

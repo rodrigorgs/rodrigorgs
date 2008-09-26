@@ -2,9 +2,54 @@
 require '../experiment'
 require '../plot'
 
-import 'abstractor.cluster.hierarchical.DerivedAgglomerativeClusterer'
-import 'abstractor.cluster.hierarchical.CompleteLinkage'
-import 'abstractor.cluster.hierarchical.CharPairSimilarity'
+#import 'abstractor.cluster.hierarchical.DerivedAgglomerativeClusterer'
+#import 'abstractor.cluster.hierarchical.CompleteLinkage'
+#import 'abstractor.cluster.hierarchical.CharPairSimilarity'
+
+require '../abstractor_agg.rb'
+require '../RAgglomerativeClusterer'
+require '../CodeSearchSimilarity'
+
+class CompleteLinkage
+	def initialize(base)
+		@base = base
+	end
+
+	def similarity(x, y)
+		min = 2.0
+		x.each do |a|
+			y.each do |b|
+				sim = @base.similarity(a, b)
+				if sim < min
+					min = sim
+				end
+			end
+		end
+		return min
+	end
+end
+
+def puts_clusters(clusters)
+	clusters.each_with_index do |cluster, i|
+		puts "== Cluster #{i} =="
+		puts cluster.join "\n"
+		puts
+	end
+end
+
+base = '/home/rodrigo/experimentos/systems'
+batch_cluster(base, 'ragg') do |input, output|
+	design = Design.new input
+	#sim = CompleteLinkage.new(CharPairSimilarity.new)
+	sim = CompleteLinkage.new(CodeSearchSimilarity.new)
+	clusterer = RAgglomerativeClusterer.new(
+			design.getGraph.getVertices, 
+			lambda { |x, y| sim.similarity(x, y) })
+	puts_clusters clusterer.getClusters(0.5).map { |x| x.map { |c| c.getUserDatum('label') } }
+	exit 1
+end
+
+exit 1
 
 sim = CompleteLinkage.new(CharPairSimilarity.new)
 DerivedAgglomerativeClusterer.setSimilarity sim
