@@ -1,7 +1,7 @@
 #!/usr/bin/env jruby
 
 require 'java'
-require '../matrix_view'
+require '../view_matrix'
 
 import 'design.model.Design'
 
@@ -22,7 +22,7 @@ vertices = design.getGraph.getVertices.toArray
 n = vertices.size
 
 matrix = fn_to_matrix(n) { |i, j| sim.similarity(vertices[i], vertices[j]) }
-matrix_view(matrix, vertices.map{ |v| v.getUserDatum("label") })
+view_matrix(matrix, vertices.map{ |v| v.getUserDatum("label") })
 
 #array2d = Array.new(n) { Array.new(n) { 1.0 } }
 #
