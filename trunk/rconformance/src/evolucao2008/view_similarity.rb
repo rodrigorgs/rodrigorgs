@@ -1,7 +1,7 @@
 #!/usr/bin/env jruby
 
 require 'java'
-require '../view_table'
+require '../matrix_view'
 
 import 'design.model.Design'
 
