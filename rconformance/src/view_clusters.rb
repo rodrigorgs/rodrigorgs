@@ -19,7 +19,7 @@ def view_clusters(clusters, &block)
 			cluster.each { |entity| file.puts "<li>#{block.call(entity)}</li>" }
 			file.puts "</ul>"
 		end
-		puts "</ul>"
+		file.puts "</ul>"
 		file.puts "</body></html>"
 	end
 
