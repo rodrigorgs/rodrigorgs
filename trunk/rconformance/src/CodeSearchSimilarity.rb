@@ -3,7 +3,7 @@
 require 'java'
 require 'cache'
 require 'code_search'
-require 'view_table'
+require 'view_matrix'
 require 'uri'
 require 'fileutils'
 

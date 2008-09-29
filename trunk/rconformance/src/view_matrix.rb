@@ -41,3 +41,54 @@ def view_matrix(matrix, labels)
 	#file.close
 end
 
+def view_matrix_as_list(matrix, labels)
+	tmp = Tempfile.new('mlist')
+	path = tmp.path
+	tmp.close!
+	
+
+	File.open(path, 'w') do |file|
+		file.puts "<html><body><ul>"
+		0.upto(labels.size-1) do |i|
+			file.puts "<li>#{labels[i]}</li>"
+			file.puts "<ul>"
+			indices = (0..labels.size - 1).sort_by{ |x| matrix[i, x] }.reverse
+			indices.delete i
+			indices.each do |j|
+				sim = "#{'%.2f' % matrix[i, j]}"
+				value = "%02X" % (255 * (1.0 - matrix[i, j]))
+				sim = "<font color=\"\##{value}#{value}C0\">#{sim}</font>"
+				file.puts "<li><tt>#{sim}</tt>&nbsp;#{labels[j]}</li>"
+			end
+			file.puts "</ul>"
+		end
+		file.puts "</ul></body></html>"
+	end
+
+	`firefox #{path}`
+end
+
+def view_matrix_pairs(matrix, labels)
+	tmp = Tempfile.new('mpairs')
+	path = tmp.path
+	tmp.close!
+	
+	File.open(path, 'w') do |file|
+		array = []
+		n = labels.size
+		0.upto(n-1) do |i|
+			(i+1).upto(n-1) { |j| array << [matrix[i, j], i, j] }
+		end
+		array = array.sort_by{ |a| a[0] }.reverse
+
+		file.puts '<table border="1">'
+		array.each do |x|
+			file.puts "<tr><td>#{'%.2f' % x[0]}</td>"
+			file.puts "<td>#{labels[x[1]]}</td><td>#{labels[x[2]]}</td></tr>"
+		end
+		file.puts '</table>'
+	end
+
+	`firefox #{path}`
+end
+
