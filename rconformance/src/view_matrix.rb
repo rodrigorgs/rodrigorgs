@@ -17,7 +17,7 @@ def fn_to_matrix(n, &block)
 end
 
 # matrix is an array of arrays
-def matrix_view(matrix, labels)
+def view_matrix(matrix, labels)
 	tmp = Tempfile.new('mview')
 	path = tmp.path
 	tmp.close!
