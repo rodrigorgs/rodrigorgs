@@ -92,3 +92,19 @@ def view_matrix_pairs(matrix, labels)
 	`firefox #{path}`
 end
 
+# matrix is an array of arrays
+# swaps two lines in a matrix. the corresponding cells are swapped.
+def swap_line(matrix, i, j)
+	matrix[i], matrix[j] = matrix[j], matrix[i]
+	matrix.each do |array|
+		array[i], array[j] = array[j], array[i]
+	end
+end
+
+# TODO: funcao que chama swap_line para agrupar entidades de um mesmo cluster
+# na matriz (ordenacao)
+
+#x = [[1,2,3],[4,5,6],[7,8,9]]
+#swap_line(x, 0, 1)
+#p x
+#raise 'Error' if x == [[5,4,6],[2,1,3],[8,7,9]]
