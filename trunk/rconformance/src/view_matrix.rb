@@ -16,7 +16,7 @@ def fn_to_matrix(n, &block)
 	return Matrix[*array]
 end
 
-# matrix is an array of arrays
+# matrix instanceof Matrix
 def view_matrix(matrix, labels)
 	tmp = Tempfile.new('mview')
 	path = tmp.path
@@ -39,6 +39,27 @@ def view_matrix(matrix, labels)
 
 	`firefox #{path}`
 	#file.close
+end
+
+# matrix instanceof array of arrays of float(0,1)
+def view_matrix_dots(matrix, cellsize=3)
+	tmp = Tempfile.new('mview')
+	path = tmp.path
+	tmp.close!
+
+	File.open(path, 'w') do |file|
+		file.puts '<table border="0" cellpadding="0" cellspacing="0">'
+		matrix.each do |row|
+			file.puts "<tr>"
+			row.each do |n|
+				color = "#00#{"%02X" % (255*n).to_i}00"
+				file.puts "<td bgcolor=\"#{color}\" width=\"#{cellsize}\" height=\"#{cellsize}\"></td>" 
+			end
+			file.puts '</tr>'
+		end
+	end
+
+	`firefox #{path}`
 end
 
 def view_matrix_as_list(matrix, labels)
@@ -94,17 +115,37 @@ end
 
 # matrix is an array of arrays
 # swaps two lines in a matrix. the corresponding cells are swapped.
-def swap_line(matrix, i, j)
+def swap_line!(matrix, i, j)
 	matrix[i], matrix[j] = matrix[j], matrix[i]
-	matrix.each do |array|
-		array[i], array[j] = array[j], array[i]
-	end
+	matrix.each { |array| array[i], array[j] = array[j], array[i] }
 end
+
 
 # TODO: funcao que chama swap_line para agrupar entidades de um mesmo cluster
 # na matriz (ordenacao)
+# clusters is an array of arrays of ints (or, optionally, an array of ints)
+def sort_matrix!(matrix, clusters)
+	i = 0
+	clusters.flatten.each do |j|
+		swap_line! matrix, i, j unless i <= j
+		i += 1
+	end
+end
 
-#x = [[1,2,3],[4,5,6],[7,8,9]]
-#swap_line(x, 0, 1)
-#p x
-#raise 'Error' if x == [[5,4,6],[2,1,3],[8,7,9]]
+####################################
+
+if __FILE__ == $0
+	require 'test/unit'
+	include Test::Unit::Assertions
+
+	x = [[1,2,3],[4,5,6],[7,8,9]]
+
+	y = x.dup
+	swap_line! y, 0, 1
+	assert_equal y, [[5,4,6],[2,1,3],[8,7,9]]
+
+	z = x.dup
+	sort_matrix! z, [1, 0, 2]
+	assert_equal y, z
+end
+
