@@ -7,7 +7,6 @@ CACHE_INSPECT = lambda {|x| x.inspect}
 CACHE_EVAL = lambda {|x| eval(x)}
 CACHE_IDENTITY = lambda {|x| x}
 
-# TODO: sometimes the client function needs to write to/read from file itself. Think about a variation where to_string/to_value is, in fact, a call to a block that writes/reads the file.
 def cache(function, dir, filename, to_string, to_value)
 	path = "#{dir}/#{filename}"
 	if File.exists? path
@@ -23,3 +22,24 @@ end
 
 # # Sample Code
 # puts cache(lambda { puts 'Caching'; 2 }, '.', 'dois', CACHE_TO_S, CACHE_TO_I)
+
+def cache2(read, write, &block)
+	begin	
+		return read.call
+	rescue
+		ret = block.call
+		write.call ret
+		return ret
+	end
+end
+
+# TODO: preciso de algo diferente. Talvez o fluxo de controle deva ser
+# controlado pelas funcoes de caching. Imagine que preciso fazer caching
+# de 900 valores. Se gravo cada valor separadamente, a leitura sera
+# ineficiente. No entanto, se considero os 900 valores em apenas uma
+# transacao, entao preciso esperar a computacao completar para ter fazer
+# o caching dos 900 valores (alem disso, nao posso paralelizar a computacao).
+# Entao preciso de suporte a caching parcial, e isso so pode ser feito se
+# o fluxo de controle for controlado pelas funcoes de caching, pois apenas
+# elas podem julgar se o caching esta completo ou eh apenas parcial.
+# (cache miss)
