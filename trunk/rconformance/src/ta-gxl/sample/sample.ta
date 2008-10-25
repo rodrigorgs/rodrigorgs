@@ -1,0 +1,31 @@
+FACT TUPLE :
+
+$INSTANCE junit package
+$INSTANCE textui package
+$INSTANCE runner package
+$INSTANCE ct class
+$INSTANCE cr class
+$INSTANCE mt class
+$INSTANCE mr class
+
+contains junit textui
+contains junit runner
+
+contains textui ct
+contains runner cr
+
+contains ct mt
+contains cr mr
+
+call mt mr
+
+FACT ATTRIBUTE :
+
+junit { shortlabel = "junit" }
+runner { shortlabel = "runner" }
+textui { shortlabel = "textui" }
+ct { shortlabel = "ct" }
+cr { shortlabel = "cr" }
+mt { shortlabel = "mt" }
+mr { shortlabel = "mr" }
+
