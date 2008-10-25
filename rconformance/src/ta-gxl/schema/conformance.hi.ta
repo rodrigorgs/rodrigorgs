@@ -1,0 +1,50 @@
+// SCHEMA
+// Author: Rodrigo Rocha G. e Souza
+// Date: 2008-10-25
+//
+// see org.designwizard.main.util.GXLUtil
+//
+
+SCHEME TUPLE :
+
+// NODE TYPES
+
+  // share attributes
+  $INHERIT class node
+  $INHERIT field node
+  $INHERIT method node
+  $INHERIT package node
+  //TODO: $INHERIT interface node?
+
+// EDGE TYPES (l0)
+
+  accesses    method  field   // doesn't differentiate btw reads and writes
+  calls       method  method
+  catches     method  class
+  contains    node    node    // TODO: refine
+  extends     class   class
+  implements  class   class
+  is          field   class   // the field's type?
+  receives    method  class
+  returns     method  class
+  throws      method  class
+  // TODO: refine contains relation to (union of)...
+  // contains class method
+  // contains class field
+  // contains class class // inner class
+  // contains package class
+
+// EDGE TYPES (l1)
+  depends_on node node
+
+
+SCHEME ATTRIBUTE :
+
+node { label access shortlabel }
+method { static = "n" } // "y" or "n"
+field { static = "n" }
+
+//edge { }
+depends_on { strength }
+
+
