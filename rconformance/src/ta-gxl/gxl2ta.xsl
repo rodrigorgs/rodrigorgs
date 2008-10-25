@@ -13,7 +13,7 @@ ROOT
 -->
 <xsl:template match="/gxl/graph">
 	<xsl:text>
-INCLUDE "conformance.hi.ta" :
+// INCLUDE "conformance.hi.ta" :
 
 FACT TUPLE :
 	</xsl:text>

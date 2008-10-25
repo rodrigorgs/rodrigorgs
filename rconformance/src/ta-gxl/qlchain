@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# XXX: not tested!
+
+Usage() {
+  this=`basename $0`
+  echo "usage: $this list-of-ql-scripts
+
+  This command reads a TA file from the standard input, runs on it the
+  list of QL scripts and then outputs the resulting TA file to the standard
+  output.
+
+  Each QL script must accept two parameters:
+    The first is the path to the input file.
+    The second is the path to the output file.
+"
+
+  exit 1
+}
+
+[ -n "$1" ] || Usage
+
+cmd="ql $1 /dev/stdin /dev/stdout"
+shift
+while [ -n "$1" ]; do
+	cmd="$cmd | ql $1 /dev/stdin /dev/stdout"
+	shift
+done
+
+#echo $cmd
+$cmd
