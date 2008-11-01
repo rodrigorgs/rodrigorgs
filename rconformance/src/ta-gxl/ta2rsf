@@ -1,0 +1,2 @@
+#!/bin/bash
+ql `dirname $0`/ta2rsf.ql /dev/stdin /dev/stdout
