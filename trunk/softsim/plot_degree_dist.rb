@@ -1,3 +1,4 @@
+#!/usr/bin/env jruby
 # graph_pairs = [[id1, id2], [íd1, id2], ...]
 
 def read_rsf_pairs(filename, relations=nil)
@@ -65,13 +66,18 @@ def plot_degree_vs_node_count(filename, relations)
 	data[:in] = cumulative_degree_vs_node_count(degrees[:in]).to_a
 	data[:out] = cumulative_degree_vs_node_count(degrees[:out]).to_a
 	data.each_pair do |k, plott|
-		plott.map! { |xypair| [Math.log(xypair[0]), Math.log(xypair[1])] }
+		plott.map! { |xypair| [Math.log10(xypair[0]), Math.log10(xypair[1])] }
 		plott.delete_if { |xypair| !xypair[0].infinite?.nil? || !xypair[1].infinite?.nil? }
 	end
-	p data
-	plot data, :type => :ScatterPlot, :view => true, 
-			:title => "#{filename} (log-log)"
+	puts "In-degree points: #{data[:in].size}"
+	plot data, :type => :ScatterPlot,
+			:title => "#{filename} - #{relations.join(', ')} (log-log)",
+			:filename => "#{filename}-#{relations.join(',')}.png"
 end
 
-plot_degree_vs_node_count(ARGV[0], %w[depends_on])
+if ARGV.size < 1
+	puts "Usage: #{$0} filename.rsf relation1 relation2 relation3 ..."
+	exit 1
+end
+plot_degree_vs_node_count(ARGV[0], ARGV[1..-1])
 
