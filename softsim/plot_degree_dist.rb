@@ -75,9 +75,10 @@ def plot_degree_vs_node_count(filename, relations)
 			:filename => "#{filename}-#{relations.join(',')}.png"
 end
 
-if ARGV.size < 1
-	puts "Usage: #{$0} filename.rsf relation1 relation2 relation3 ..."
-	exit 1
+if __FILE__ == $0
+  if ARGV.size < 2
+    puts "Usage: #{$0} filename.rsf relation1 relation2 relation3 ..."
+    exit 1
+  end
+  plot_degree_vs_node_count(ARGV[0], ARGV[1..-1])
 end
-plot_degree_vs_node_count(ARGV[0], ARGV[1..-1])
-
