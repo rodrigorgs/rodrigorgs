@@ -29,6 +29,7 @@ def tempfilename
 end
 
 def plot(data, params={})
+	data = {'' => data} if data.kind_of?(Array)
 	collection = hash_to_xycollection(data)
 
 	chart = ChartFactory.send "create#{params[:type] || 'ScatterPlot'}",
@@ -41,7 +42,7 @@ def plot(data, params={})
 			params[:tooltips] || false,
 			params[:urls] || false
 
-	filename = params[:file] || tempfilename + '.png'
+	filename = params[:filename] || tempfilename + '.png'
 
 	plot = chart.getPlot
 	ChartUtilities.saveChartAsPNG(
