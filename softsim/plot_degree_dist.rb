@@ -1,13 +1,13 @@
-#!/usr/bin/env jruby
+#!/usr/bin/env ruby
 # graph_pairs = [[id1, id2], [íd1, id2], ...]
 
-def read_rsf_pairs(filename, relations=nil)
-	relations = [relations] if !relations.nil? && !relations.kind_of?(Array)
+def read_rsf_pairs(filename, relations=[])
+	relations = [relations] if !relations.kind_of?(Array)
 
 	pairs = []
 	lines = IO.readlines(filename)
 	lines.map{ |line| line.strip.split(/\s+/) }.each do |rel, e1, e2|
-		pairs << [e1, e2] if relations.nil? || relations.include?(rel)
+		pairs << [e1, e2] if relations.empty? || relations.include?(rel)
 	end
 
 	return pairs
@@ -44,10 +44,6 @@ end
 # output: a hash from degree to count(degree >= k)
 def cumulative_degree_vs_node_count(degrees)
 	return cumulative_plot(degree_vs_node_count(degrees))
-	#cum_node_count = node_count.dup
-	#node_count.each_pair do |degree, count|
-	#	0.upto(degree - 1) { |k| cum_node_count[k] += 1 }
-	#end
 end
 
 def xy_hash_to_xy_list(hash)
@@ -56,7 +52,7 @@ end
 
 # -------------------------------------------------
 
-require '../rconformance/src/plot'
+#require '../rconformance/src/plot'
 
 def plot_degree_vs_node_count(filename, relations)
 	pairs = read_rsf_pairs(filename, relations)
@@ -65,19 +61,25 @@ def plot_degree_vs_node_count(filename, relations)
 	data = {}
 	data[:in] = cumulative_degree_vs_node_count(degrees[:in]).to_a
 	data[:out] = cumulative_degree_vs_node_count(degrees[:out]).to_a
-	data.each_pair do |k, plott|
-		plott.map! { |xypair| [Math.log10(xypair[0]), Math.log10(xypair[1])] }
-		plott.delete_if { |xypair| !xypair[0].infinite?.nil? || !xypair[1].infinite?.nil? }
-	end
-	puts "In-degree points: #{data[:in].size}"
-	plot data, :type => :ScatterPlot,
-			:title => "#{filename} - #{relations.join(', ')} (log-log)",
-			:filename => "#{filename}-#{relations.join(',')}.png"
+  
+  data.each_pair do |k, curve|
+    # puts "# #{k}"
+    curve.sort.each { |x, y| puts "#{x} #{y}" }
+    puts
+  end
+	#data.each_pair do |k, plott|
+	#	plott.map! { |xypair| [Math.log10(xypair[0]), Math.log10(xypair[1])] }
+	#	plott.delete_if { |xypair| !xypair[0].infinite?.nil? || !xypair[1].infinite?.nil? }
+	#end
+	#puts "In-degree points: #{data[:in].size}"
+	#plot data, :type => :ScatterPlot,
+	#		:title => "#{filename} - #{relations.join(', ')} (log-log)",
+	#		:filename => "#{filename}-#{relations.join(',')}.png"
 end
 
 if __FILE__ == $0
-  if ARGV.size < 2
-    puts "Usage: #{$0} filename.rsf relation1 relation2 relation3 ..."
+  if ARGV.size < 1
+    puts "Usage: #{$0} filename.rsf [relation1 relation2 relation3 ...]"
     exit 1
   end
   plot_degree_vs_node_count(ARGV[0], ARGV[1..-1])
