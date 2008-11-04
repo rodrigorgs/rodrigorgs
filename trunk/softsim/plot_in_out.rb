@@ -1,10 +1,10 @@
-#!/usr/bin/env jruby
+#!/usr/bin/env ruby
 
-require 'plot_degree_dist'
-require '../rconformance/src/plot'
+require 'grok'
 
-def compute_node_degrees(pairs)
-  hash = Hash.new #([0, 0]) # [out, in]
+# Returns a hash: node_id => [out_degree, in_degree]
+def node_degrees(pairs)
+  hash = Hash.new
   pairs.each do |x, y|
     hash[x] ||= [0, 0]
     hash[y] ||= [0, 0]
@@ -14,21 +14,21 @@ def compute_node_degrees(pairs)
   return hash
 end
 
+# List of [out_degree, in_degree] pairs (one pair for each node)
+def out_in_degrees(pairs)
+  node_degrees(pairs).values
+end
+
+# register(:out_in_degrees)
+
+=begin
 def plot_in_out(filename, relations)
   pairs = read_rsf_pairs(filename, relations)
-  
+ 
   degrees = compute_node_degrees(pairs)
-  
-  data = []
-  degrees.values.each { |p| data << p }
-  
-  
-  #File.open('bli.graph', 'w') { |f| data.each { |xy| f.puts xy.join("\t") } }
-  data = {' ' => data}
-	plot data, :type => :ScatterPlot,
-			:title => "#{filename} - #{relations.join(', ')}",
-			:filename => "#{filename}-outXin-#{relations.join(',')}.png",
-      :labelx => 'out degree', :labely => 'in degree', :legend => false
+ 
+  degrees.values.each { |x, y| puts "#{x} #{y}" }
+  return degrees.values
 end
 
 
@@ -39,3 +39,4 @@ if __FILE__ == $0
   end
   plot_in_out(ARGV[0], ARGV[1..-1])
 end
+=end
