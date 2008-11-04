@@ -1,17 +1,6 @@
 #!/usr/bin/env ruby
-# graph_pairs = [[id1, id2], [íd1, id2], ...]
 
-def read_rsf_pairs(filename, relations=[])
-	relations = [relations] if !relations.kind_of?(Array)
-
-	pairs = []
-	lines = IO.readlines(filename)
-	lines.map{ |line| line.strip.split(/\s+/) }.each do |rel, e1, e2|
-		pairs << [e1, e2] if relations.empty? || relations.include?(rel)
-	end
-
-	return pairs
-end
+require 'grok'
 
 def compute_degrees(edges)
 	out_degrees = Hash.new(0)
@@ -52,8 +41,6 @@ end
 
 # -------------------------------------------------
 
-#require '../rconformance/src/plot'
-
 def plot_degree_vs_node_count(filename, relations)
 	pairs = read_rsf_pairs(filename, relations)
 
@@ -63,18 +50,9 @@ def plot_degree_vs_node_count(filename, relations)
 	data[:out] = cumulative_degree_vs_node_count(degrees[:out]).to_a
   
   data.each_pair do |k, curve|
-    # puts "# #{k}"
     curve.sort.each { |x, y| puts "#{x} #{y}" }
     puts
   end
-	#data.each_pair do |k, plott|
-	#	plott.map! { |xypair| [Math.log10(xypair[0]), Math.log10(xypair[1])] }
-	#	plott.delete_if { |xypair| !xypair[0].infinite?.nil? || !xypair[1].infinite?.nil? }
-	#end
-	#puts "In-degree points: #{data[:in].size}"
-	#plot data, :type => :ScatterPlot,
-	#		:title => "#{filename} - #{relations.join(', ')} (log-log)",
-	#		:filename => "#{filename}-#{relations.join(',')}.png"
 end
 
 if __FILE__ == $0

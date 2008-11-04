@@ -1,6 +1,6 @@
-#!/usr/bin/env jruby
+#!/usr/bin/env ruby
 
-require 'plot_degree_dist'
+require 'grok'
 
 def compute_node_degrees(pairs)
   hash = Hash.new #([0, 0]) # [out, in]
