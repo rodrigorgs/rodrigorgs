@@ -13,9 +13,17 @@ def output(array)
   p array
 end
 
+# TODO: syntax for using the output of a command as the receiver of the next
+# command. 
+# Example: 
+#   eval [1,2,3] // .max // p
+# should call
+#   eval "[1,2,3]"
+#   [1, 2, 3].max
+#   p 3
 def ssrun(cmd_list)
   output = nil
-  cmd_list.split('|').each do |cmd|
+  cmd_list.split('//').each do |cmd|
     #cmd = cmd.strip
     STDERR.puts cmd
 
@@ -37,15 +45,19 @@ end
 
 def ssrun_help
   puts <<EOT 
-Usage: #{$0} "command_1 | command_2 | ... | command_n"
 
-where command is function_name param_1 param_2 ... param_n
+Usage:
+  #{$0} "command_1 // command_2 // ... // command_n"
+
+where
+  command is function_name param_1 param_2 ... param_n
 
 This script will run each function with the given parameters (interpreted as
-strings) plus the output of the previous command.
+strings) plus the output of the previous command. It is analogous to the
+concept of pipes (|) from unix shells.
 
 Example:
-  #{$0} "eval [1,2,3] | double | sum 1 | p"
+  #{$0} eval [1,2,3] // double // sum 1 // p"
 
 This will produce the following sequence of calls
 
