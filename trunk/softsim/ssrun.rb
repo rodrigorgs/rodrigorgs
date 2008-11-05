@@ -13,21 +13,24 @@ def output(array)
   p array
 end
 
-def ssrun(string)
+def ssrun(cmd_list)
   output = nil
-  string.split('|').each do |cmd|
+  cmd_list.split('|').each do |cmd|
+    #cmd = cmd.strip
+    STDERR.puts cmd
+
     tokens = cmd.split
     func = tokens[0]
     args = tokens[1..-1]
 
     args = [output] + args unless output.nil?
-    #puts "#{func} #{args.inspect[1..-2]}"
+    #STDERR.puts "#{func} {args.inspect[1..-2]}"
     if args.empty?
       output = Kernel.send(func)
     else
       output = Kernel.send(func, *args)
     end
-    #puts "==> #{output.inspect}"
+    #STDERR.puts "==> {output.inspect}"
   end
 end
 
@@ -56,9 +59,13 @@ EOT
 end
 
 if __FILE__ == $0
-  dirname = File.dirname(__FILE__)
-  Dir.glob("#{dirname}/**/*.rb").each { |filename| require filename }
+  if !defined?(SS_RUNNING)
+    SS_RUNNING = true
 
-  ssrun_help if ARGV.empty?
-  ssrun ARGV.join(' ')
+    dirname = File.dirname(__FILE__)
+    Dir.glob("#{dirname}/**/*.rb").each { |filename| require filename }
+
+    ssrun_help if ARGV.empty?
+    ssrun ARGV.join(' ')
+  end
 end
