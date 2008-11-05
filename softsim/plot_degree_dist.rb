@@ -35,30 +35,26 @@ def cumulative_degree_vs_node_count(degrees)
 	return cumulative_plot(degree_vs_node_count(degrees))
 end
 
-def xy_hash_to_xy_list(hash)
-	return hash.to_a
-end
-
 # -------------------------------------------------
 
-def plot_degree_vs_node_count(filename, relations)
-	pairs = read_rsf_pairs(filename, relations)
-
-	degrees = compute_degrees(pairs)
-	data = {}
-	data[:in] = cumulative_degree_vs_node_count(degrees[:in]).to_a
-	data[:out] = cumulative_degree_vs_node_count(degrees[:out]).to_a
-  
-  data.each_pair do |k, curve|
-    curve.sort.each { |x, y| puts "#{x} #{y}" }
-    puts
-  end
-end
-
-if __FILE__ == $0
-  if ARGV.size < 1
-    puts "Usage: #{$0} filename.rsf [relation1 relation2 relation3 ...]"
-    exit 1
-  end
-  plot_degree_vs_node_count(ARGV[0], ARGV[1..-1])
-end
+#def plot_degree_vs_node_count(filename, relations)
+#	pairs = read_rsf_pairs(filename, relations)
+#
+#	degrees = compute_degrees(pairs)
+#	data = {}
+#	data[:in] = cumulative_degree_vs_node_count(degrees[:in]).to_a
+#	data[:out] = cumulative_degree_vs_node_count(degrees[:out]).to_a
+#  
+#  data.each_pair do |k, curve|
+#    curve.sort.each { |x, y| puts "#{x} #{y}" }
+#    puts
+#  end
+#end
+#
+#if __FILE__ == $0
+#  if ARGV.size < 1
+#    puts "Usage: #{$0} filename.rsf [relation1 relation2 relation3 ...]"
+#    exit 1
+#  end
+#  plot_degree_vs_node_count(ARGV[0], ARGV[1..-1])
+#end
