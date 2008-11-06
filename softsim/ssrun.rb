@@ -24,12 +24,15 @@ end
 def ssrun(cmd_list)
   output = nil
   cmd_list.split('//').each do |cmd|
-    #cmd = cmd.strip
-    STDERR.puts cmd
+    cmd = cmd.strip
+    #STDERR.puts cmd
 
     tokens = cmd.split
     func = tokens[0]
     args = tokens[1..-1]
+    
+    #if func[0] == '.' && !output.nil?
+    #  target = output
 
     args = [output] + args unless output.nil?
     #STDERR.puts "#{func} {args.inspect[1..-2]}"
@@ -71,13 +74,13 @@ EOT
 end
 
 if __FILE__ == $0
-  if !defined?(SS_RUNNING)
-    SS_RUNNING = true
-
-    dirname = File.dirname(__FILE__)
-    Dir.glob("#{dirname}/**/*.rb").each { |filename| require filename }
-
-    ssrun_help if ARGV.empty?
-    ssrun ARGV.join(' ')
+  dirname = File.dirname(__FILE__)
+  Dir.glob("#{dirname}/**/*.rb").each do |filename|
+    require filename unless filename == __FILE__
+    #puts filename
+    #require filename
   end
+
+  ssrun_help if ARGV.empty?
+  ssrun ARGV.join(' ')
 end
