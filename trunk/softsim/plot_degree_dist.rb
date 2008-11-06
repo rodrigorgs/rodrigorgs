@@ -10,7 +10,7 @@ def compute_degrees(edges)
 		in_degrees[to] += 1
 	end
 
-	return {:in => in_degrees, :out => out_degrees}
+	return {'in' => in_degrees, 'out' => out_degrees}
 end
 
 # degrees: a hash from node_id to degree
@@ -35,6 +35,19 @@ def cumulative_degree_vs_node_count(degrees)
 	return cumulative_plot(degree_vs_node_count(degrees))
 end
 
+def cumulative_degrees(pairs, in_or_out)
+  d = compute_degrees(pairs)
+  cumulative_degree_vs_node_count(degrees[in_or_out]).to_a.sort
+end
+
+def cumulative_in_degrees(pairs)
+  cumulative_degrees(pairs, 'in')
+end
+
+def cumulative_out_degrees(pairs)
+  cumulative_degrees(pairs, 'out')
+end
+
 # -------------------------------------------------
 
 #def plot_degree_vs_node_count(filename, relations)
@@ -42,8 +55,8 @@ end
 #
 #	degrees = compute_degrees(pairs)
 #	data = {}
-#	data[:in] = cumulative_degree_vs_node_count(degrees[:in]).to_a
-#	data[:out] = cumulative_degree_vs_node_count(degrees[:out]).to_a
+#	data['in'] = cumulative_degree_vs_node_count(degrees['in']).to_a
+#	data['out'] = cumulative_degree_vs_node_count(degrees['out']).to_a
 #  
 #  data.each_pair do |k, curve|
 #    curve.sort.each { |x, y| puts "#{x} #{y}" }

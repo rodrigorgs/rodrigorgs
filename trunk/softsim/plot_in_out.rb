@@ -19,24 +19,3 @@ def out_in_degrees(pairs)
   node_degrees(pairs).values
 end
 
-# register(:out_in_degrees)
-
-=begin
-def plot_in_out(filename, relations)
-  pairs = read_rsf_pairs(filename, relations)
- 
-  degrees = compute_node_degrees(pairs)
- 
-  degrees.values.each { |x, y| puts "#{x} #{y}" }
-  return degrees.values
-end
-
-
-if __FILE__ == $0
-  if ARGV.size < 1
-    puts "Usage: #{$0} filename.rsf [relation1 relation2 relation3 ...]"
-    exit 1
-  end
-  plot_in_out(ARGV[0], ARGV[1..-1])
-end
-=end
