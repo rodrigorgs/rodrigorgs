@@ -1,0 +1,87 @@
+% vim: tw=80 noai
+\documentclass[a4]{article}
+%\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
+%\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{subfigure}
+\usepackage{multicol}
+\usepackage{framed}
+
+%\hyphenation{ab-stract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\lstlistingname{Listagem}
+
+% Comandos
+%\newcommand{\TODO}{\textbf{TODO:} }
+
+\newcommand{\web}{\emph{web}}
+
+\begin{document}
+
+\begin{abstract}
+% Kent Beck's four sentences for a good abstract:
+%% the problem
+%% why the problem is a problem
+%% startling sentence
+%% implication of the startling sentence
+
+  Muitos sistemas não têm uma arquitetura bem documentada.
+  Sem arquitetura bem documentada é difícil entender o sistema e planejar mudanças
+  O uso de tecnicas de mineracao e algoritmos de clustering ajuda a construir uma visão arquitetural do sistema.
+    Avaliamos algumas dessas técnicas
+  Essas tecnicas revelam bla-bla-bla.
+  
+
+bli~\cite{Maqbool2007}
+
+\textbf{Keywords:} 
+aspect-oriented modeling,
+reverse engineering,
+software visualization.
+\end{abstract}
+
+% Introducao sobre recuperacao arquitetural (e trabalhos relacionados). 
+% Clustering
+%% Descricao das entidades, descricao de acoplamento, ...
+%% Caracteristicas de software
+% Algoritmo hierárquico aglomerativo e técnicas associadas
+%% AHA - merges são finais
+%% AHA - algoritmo guloso, otimização local
+%% AHA - medidas monotonicamente relacionadas (
+%% AHA - usa matriz de similaridade, que pode codificar qualquer critério
+% Experimento
+%% Sistemas avaliados
+%%% Caracteristicas: densidade, similaridade media, desvio-padrao da simil.
+%% Criterios de avaliacao (authoritative..., size, stability)
+% Resultados experimentais e sua interpretacao
+%% Threats to validity.
+%%% As métricas são uma merda. O extractor funciona bem?
+%% Avaliacao quantitativa
+%% Avaliacao qualitativa
+% Discussao
+%% O que significa esse particionamento? Pra que serve?
+
+%%
+\input{introducao.tex}
+%%%%
+%\input{conceitos.tex}
+%%%
+%\input{metodologia.tex}
+
+%\input{estudoDeCaso.tex}
+%
+%\input{conclusoes.tex}
+
+
+
+
+\bibliographystyle{alpha}
+\bibliography{evolucao2008}
+
+\end{document}
