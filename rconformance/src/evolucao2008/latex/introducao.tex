@@ -1,30 +1,48 @@
 \section{Introdução} \label{intro}
 
-O conjunto de decisões mais significativas de um software formam 
-arquitetura do software. Essas decisões devem ser tomadas cedo no processo
-de desenvolvimento do software, pois elas afetam um grande número de decisões
-que devem ser tomadas ao longo do desenvolvimento.
+As decisões mais significativas de um software formam a
+arquitetura do software~\cite{Booch2006}. Essas decisões devem ser tomadas nos
+estágios iniciais do processo de desenvolvimento, pois elas afetam um grande 
+número de decisões ao longo do ciclo de vida do software.
 
-As decisões arquiteturais são motivadas pelos requisitos do sistema e dizem
-respeito a uma parte de seus \emph{stakeholders}. É comum dividir a
-arquitetura em diversas visões, cada uma delas contemplando um subconjunto
-dos requisitos e dos \emph{stakeholders}. A visão lógica, por exemplo,
-é destinada principalmente aos \emph{designers} e programadores e trata de
-requisitos como a facilidade de manutenção e de compreensão do \emph{software}.
-[cite 4+1]
+Uma arquitetura é motivada pelos requisitos do software e pelas pessoas 
+interessadas no sistema (os chamados \emph{stakeholders}).
+É comum apresentar uma arquitetura em diversas visões, cada uma delas 
+contemplando um subconjunto dos requisitos e dos 
+\emph{stakeholders}~\cite{Kruchten1995}.
+A visão lógica, por exemplo, é destinada principalmente aos desenvolvedores 
+e trata de requisitos como a facilidade de manutenção e de compreensão do
+software.
 
 O campo de pesquisa denominado recuperação de arquitetura de software tem como
 objetivo extrair aspectos da arquitetura de um sistema a partir de artefatos
 criados durante seu desenvolvimento. A maioria dos trabalhos na
-área se concentra na recuperação de uma visão lógica da arquitetura de um
-sistema a partir da análise de seu código-fonte.
+área se concentra na recuperação de uma visão lógica da arquitetura 
+a partir da análise de código-fonte.
 
-Uma boa porção desses trabalhos emprega algoritmos de agrupamento
-(\emph{clustering}) para identificar grupos de entidades de código-fonte
-(tipicamente funções e classes). Um bom agrupamento deve
-fornecer a desenvolvedores uma visão geral do sistema e deve revelar atributos
-de qualidade do software como reusabilidade, manutenibilidade e facilidade de
-compreensão.
+Muitos trabalhos empregam algoritmos de agrupamento
+(\emph{clustering}) para decompor softwares em grupos elementos de design
+(tipicamente funções e classes) relacionadas. Uma boa decomposição deve
+refletir a visão de um especialista sobre o software.
+%fornecer a desenvolvedores uma visão geral do sistema e deve revelar atributos
+%de qualidade do software como reusabilidade, manutenibilidade e facilidade de
+%compreensão.
+
+Este trabalho avalia o algoritmo hierárquico aglomerativo através de sua
+aplicação em dez softwares escritos em Java, uma linguagem orientada a
+objetos. 
+%
+A seção \ref{sec:recovery} descreve de modo geral o processo de 
+recuperação de arquitetura.
+%
+A seção \ref{sec:aha} apresenta o algoritmo hierárquico aglomerativo.
+%
+A seção \ref{sec:experimento} descreve o experimento realizado para avaliar
+o algoritmo, e a seção \ref{sec:resultados} avalia os resultados desse
+experimento.
+%
+Por fim, a seção \ref{sec:discussao} apresenta intuições sobre o uso de
+algoritmos de agrupamento para recuperação de arquitetura.
 
 %% trabalhos relacionados?? Anquetil e Lethbridge, Maqbool e Babri.
 
