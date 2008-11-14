@@ -1,7 +1,68 @@
+%Avaliação dos dados.
+%  Forma.
+%  Tamanho.
+%  Densidade.
+%  Presença de ruídos.
+%  Coeficiente de clustering (tendência de clustering).
 
-Avaliação dos dados.
-  Forma.
-  Tamanho.
-  Densidade.
-  Presença de ruídos.
-  Coeficiente de clustering (tendência de clustering).
+\section{Experimento}
+
+
+\centering
+\begin{tabular}{l l r}
+\hline
+id & nome & classes \\
+\hline 
+01\_junit       & JUnit               & 23  \\
+02\_villonanny  & VilloNanny          & 25  \\
+03\_easymock    & EasyMock            & 63  \\
+04\_pdfsam      & PDF Split and Merge & 68  \\
+05\_irc         & JWIRC               & 133 \\
+06\_SweetHome3D & Sweet Home 3D       & 97  \\
+07\_jvlt        & jVLT                & 235 \\
+08\_jedit       & jEdit               & 234 \\
+09\_robocode    & Robocode            & 251 \\
+10\_jgnash      & jGnash              & 321 \\
+\hline
+\end{tabular}
+
+
+\section{Resultados}
+
+\subsection{Critérios de avaliação}
+Para avaliar a qualidade das decomposições encontradas pelos algoritmos,
+usamos dois critérios: semelhança com decomposição de referência e
+tamanho dos clusters. [Anquetil]
+
+O primeiro critério avalia o quanto a decomposição encontrada para um
+sistema se assemelha à decomposição feita por um especialista no sistema.
+Dada a dificuldade de se encontrar uma decomposição especialista, a
+consideramos a estrutura de pacotes do sistema (cada pacote representa um 
+módulo).
+
+Para comparar duas decomposições, utilizamos a métrica MoJo [Cite].
+O MoJo entre 
+duas decomposições é a quantidade de operações move --- mover uma classe
+de um módulo para outro -- e join --- unir dois módulos --- necessárias
+para se transformar uma decomposição em outra.
+
+O segundo critério de avaliação é o tamanho dos módulos. Alguns algoritmos
+tendem a formar muitos módulos pequenos ou então um grande módulo que engloba
+quase todo o sistema, o que não é bom. 
+Seguindo fulaninho, consideramos de bom tamanho os módulos que contêm
+entre 5 e 100 classes (inclusive). A métrica NED (non-extreme distribution)
+indica qual fração dos módulos do sistema tem um bom tamanho.
+
+\subsection{Avaliação quantitativa}
+
+Desempenho: cerca de 1 hora em um Atlhon 64 3000+ com 1 GB de RAM, Linux 2.6.18
+
+
+\subsection{Avaliação qualitativa}
+
+\subsection{Ameaças à validade}
+
+
+
+
+\section{Discussão}

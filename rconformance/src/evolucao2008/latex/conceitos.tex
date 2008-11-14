@@ -1,24 +1,114 @@
-Modelo de design OO: grafo
+\section{Recuperação arquitetural a partir do código-fonte}
 
-Clustering: coloca no mesmo grupo entidades similares
+A recuperação da arquitetura de um sistema a partir de um código-fonte pode
+ser dividida em duas etapas: a extração do design do sistema e a abstração
+desse design para uma descrição arquitetural.
 
-Como definir a similaridade entre entidades?
-  Parâmetros formais.
-  Parâmetros não-formais. (Anquetil)
+Para extrair o design, usamos a ferramenta Design Wizard, que faz análise
+estática de programas escritos em Java. O design é 
+descrito por um grafo onde os vértices representam as classes do sistema
+e as arestas representam dependências entre as classes. Essa dependência
+ocorre em diversas situações --- por exemplo, quando uma classe possui uma
+referência para um objeto de outra classe, ou quando um de seus métodos chama
+algum método de outra classe.
 
-Algoritmo HA. (Anquetil, Maqbool)
-  Explicação.
-  Similaridade entre clusters.
-  Critério de parada, ponto de corte.
+A etapa de abstração consiste na aplicação de algoritmos de agrupamento sobre
+as classes do design. O resultado é um particionamento do sistema en módulos
+arquiteturais concebidos de forma que cada módulo contém classes similares.
 
-Características do algoritmo HA.
-  merges são finais.
-  algoritmo guloso, otimização local.
-  medidas monotonicamente relacionadas.
-  usa matriz de similaridade, que pode codificar qualquer critério.
+É necessário, portanto, quantificar a similaridade entre cada par de classes
+de um sistema. A métrica de similaridade pode considerar diversas 
+características das classes, tais como identificadores e comentários a elas
+associados, ou mesmo seu histórico de modificações.
+%os nomes das classes e comentários a elas associados, a identidade dos
+%desenvolvedores que modificaram a classe ou a quantidade de modificações.
+Neste trabalho, no entanto, a métrica de similaridade é definida a partir
+das relações de dependência entre as classes.
 
-Técnicas.
-  k-NN: k-nearest neighbors.
-  SNN: shared nearest neighbors.
-  aplicar distância à matriz de similaridade para obter outra.
+  [Figura: matriz de adjacências, representação de uma classe, grafo
+  correspondente]
+
+Existe uma literatura vasta sobre algoritmos de agrupamento. Neste trabalho
+avaliaremos o algoritmo de agrupamento hierárquico aglomerativo.
+
+\subsection{Algoritmo hierárquico algomerativo}
+
+O algoritmo hierárquico aglomerativo (HA) produz, a partir de um conjunto
+de classes e de uma métrica de similaridade entre classes, uma hierarquia
+de grupos (\emph{clusters}), como mostra a figura \ref{fig:dendograma}. 
+Cada grupo da hierarquia contém dois grupos menores.
+%Nessa hierarquia, dois módulos podem ser agrupados em um
+%módulo maior.
+%Nessa hierarquia, cada módulo contém outros dois módulos, com
+%exceção dos módulos unitários, que contém uma classe.
+A hierarquia pode ser
+representada por uma árvore (chamada de dendograma) cujas folhas
+representam grupos unitários (que contêm apenas uma classe) e a raiz
+representa um grupo que contém, transitivamente, todas as classes do
+sistema.
+
+  [Figura do livro - dendograma]
+
+Chamamos de grupo raiz um grupo que não está contido em nenhum outro
+grupo.
+O algoritmo considera inicialmente cada classe como um grupo unitário e, a 
+cada passo, agrupa os dois grupos raízes mais similares 
+até que reste apenas um grupo raiz.
+
+  [Algoritmo]
+
+A similaridade entre dois grupos pode ser definida de diversas maneiras.
+No Single Linkage, a similaridade entre dois grupos é a similaridade
+entre os elementos mais similares --- um elemento de cada grupo.
+No Complete Linkage, esse valor é a similaridade entre
+os elementos menos similares --- um elemento de cada grupo.
+Group Average...
+
+  [Figura do livro - linkage]
+
+Para obter um particionamento do sistema sob análise em módulos, basta
+cortar o dendograma em algum ponto. 
+Na altura 0, temos modulos unitários
+Na altura 1, temos um grande módulo
+
+\subsubsection{Características}
+
+merges são finais.
+algoritmo guloso, otimização local.
+medidas monotonicamente relacionadas.
+usa matriz de similaridade, que pode codificar qualquer critério.
+complexidade alta
+determinístico
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% A técnica aqui apresentada 
+% 
+% Modelo de design OO: grafo
+% 
+% Clustering: coloca no mesmo grupo entidades similares
+% 
+% Como definir a similaridade entre entidades?
+%   Parâmetros formais.
+%   Parâmetros não-formais. (Anquetil)
+% 
+% Algoritmo HA. (Anquetil, Maqbool)
+%   Explicação.
+%   Similaridade entre clusters.
+%   Critério de parada, ponto de corte.
+% 
+% Características do algoritmo HA.
+%   merges são finais.
+%   algoritmo guloso, otimização local.
+%   medidas monotonicamente relacionadas.
+%   usa matriz de similaridade, que pode codificar qualquer critério.
+% 
+% Técnicas.
+%   k-NN: k-nearest neighbors.
+%   SNN: shared nearest neighbors.
+%   aplicar distância à matriz de similaridade para obter outra.
+% 
+
+%\section{Avaliação}
+
 
