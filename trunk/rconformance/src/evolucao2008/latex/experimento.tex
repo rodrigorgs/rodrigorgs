@@ -5,42 +5,79 @@
 %  Presença de ruídos.
 %  Coeficiente de clustering (tendência de clustering).
 
-\section{Experimento}
+\section{Experimento} \label{sec:experimento}
 
+Aplicamos o algoritmo hierárquico aglomerativo em 10 sistemas de diversos 
+tamanhos, todos escritos em Java, conforme mostra a tabela \ref{tbl:sistemas}. 
+Esse conjunto de estudo é um subconjunto dos 15 sistemas estudados por 
+Bittencourt et al. no projeto Conformance.
 
-\centering
-\begin{tabular}{l l r}
-\hline
-id & nome & classes \\
-\hline 
-01\_junit       & JUnit               & 23  \\
-02\_villonanny  & VilloNanny          & 25  \\
-03\_easymock    & EasyMock            & 63  \\
-04\_pdfsam      & PDF Split and Merge & 68  \\
-05\_irc         & JWIRC               & 133 \\
-06\_SweetHome3D & Sweet Home 3D       & 97  \\
-07\_jvlt        & jVLT                & 235 \\
-08\_jedit       & jEdit               & 234 \\
-09\_robocode    & Robocode            & 251 \\
-10\_jgnash      & jGnash              & 321 \\
-\hline
-\end{tabular}
+\begin{table} \label{tbl:sistemas}[ht]
+  \caption{Caraterísticas dos sistemas analisados: nome e quantidade de classes}
+  \centering
+  \begin{tabular}{l l r}
+  \hline
+  id & sistema & \# classes \\
+  \hline 
+  01\_junit       & JUnit               & 23  \\
+  02\_villonanny  & VilloNanny          & 25  \\
+  03\_easymock    & EasyMock            & 63  \\
+  04\_pdfsam      & PDF Split and Merge & 68  \\
+  05\_irc         & JWIRC               & 133 \\
+  06\_SweetHome3D & Sweet Home 3D       & 97  \\
+  07\_jvlt        & jVLT                & 235 \\
+  08\_jedit       & jEdit               & 234 \\
+  09\_robocode    & Robocode            & 251 \\
+  10\_jgnash      & jGnash              & 321 \\
+  \hline
+  \end{tabular}
+\end{table}
 
+A métrica de similaridade entre classes usada no experimento se baseia nas
+relações relações de dependência entre classes. 
+Sejam $A$ e $B$ duas classes, e seja f($X$) o conjunto de classes das quais a 
+classe $X$ depende. Definimos a similaridade entre duas classes, $A$ e $B$, 
+como coeficiente de Jaccard entre f($A$) e f($B$):
 
-\section{Resultados}
+\begin{equation}
+\label{eq:jaccard}
+\mathrm{sim}(A, B) = \frac{|\mathrm{f}(A) \, \cap \, \mathrm{f}(B)|}
+                          {|\mathrm{f}(A) \, \cup \, \mathrm{f}(B)|}
+\end{equation}
+
+A métrica de similaridade entre grupos usada no experimento foi a
+\emph{complete linkage}. Alguns trabalhos~\cite{Wu2005,Anquetil1999}
+concluem que essa métrica produz resultados melhores do que a métrica 
+\emph{single linkage}. Em especial, os melhores resultados foram obtidos
+(em \cite{Wu2005}) com a altura de corte igual a 0.90, e por isso ela
+foi utilizada neste experimento.
+
+%Utilizamos 0.90 como altura de corte do dendograma, 
+%
+%Duas métricas de similaridade:
+%- coeficiente de Jaccard aplicado sobre a matriz de adjacências da relação
+%de dependência estática.
+%- distância euclidiana aplicada sobre a matriz dos coeficientes de Jaccard.
+%
+%A intuição para a segunda métrica é que classes que são similares às
+%mesmas classes devem ser similares entre si.
+%
+%Duas alturas de corte: (estudadas por [Anquetil?])
+%- 0.75
+%- 0.90
 
 \subsection{Critérios de avaliação}
 Para avaliar a qualidade das decomposições encontradas pelos algoritmos,
 usamos dois critérios: semelhança com decomposição de referência e
-tamanho dos clusters. [Anquetil]
+tamanho dos clusters~\cite{Anquetil1999}.
 
 O primeiro critério avalia o quanto a decomposição encontrada para um
 sistema se assemelha à decomposição feita por um especialista no sistema.
-Dada a dificuldade de se encontrar uma decomposição especialista, a
+Dada a dificuldade de se encontrar uma decomposição feita por um especialista,
 consideramos a estrutura de pacotes do sistema (cada pacote representa um 
 módulo).
 
-Para comparar duas decomposições, utilizamos a métrica MoJo [Cite].
+Para comparar duas decomposições, utilizamos a métrica MoJo~\cite{Tzerpos1999}.
 O MoJo entre 
 duas decomposições é a quantidade de operações move --- mover uma classe
 de um módulo para outro -- e join --- unir dois módulos --- necessárias
@@ -53,16 +90,52 @@ Seguindo fulaninho, consideramos de bom tamanho os módulos que contêm
 entre 5 e 100 classes (inclusive). A métrica NED (non-extreme distribution)
 indica qual fração dos módulos do sistema tem um bom tamanho.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Resultados} \label{sec:resultados}
+
+Desempenho: cerca de 10 minutos em um Atlhon 64 3000+ com 1 GB de RAM, Linux 2.6.18
+A implementação desenvolvida para o experimento não foi otimizada.
+(o último sistema demorou 2 minutos para cada métrica de similaridade)
+
+A tabela ... sumariza os resultados obtidos no experimento. Como base de 
+comparação, incluímos os resultados obtidos por Bittencourt et al. com o 
+algoritmo k-means.
+
 \subsection{Avaliação quantitativa}
 
-Desempenho: cerca de 1 hora em um Atlhon 64 3000+ com 1 GB de RAM, Linux 2.6.18
+
+Perguntas:
+- Como euclidean afeta score, ned e mojo?
+- Como altura afeta score, ned e mojo
+--- Nos sistemas grandes
+
+- Qual a melhor altura?
+-- 90
+- Qual a melhor similaridade?
+-- jac
+
+- Como o melhor algoritmo, com melhor altura e melhor similaridade, se compara 
+ao k-means?
+
+\subsubsection{Tamanho dos clusters}
+
+\subsubsection{Semelhança com decomposição de referência}
+
+\subsubsection{Score}
 
 
-\subsection{Avaliação qualitativa}
+% \subsection{Avaliação qualitativa}
 
 \subsection{Ameaças à validade}
 
+Poucos sistemas
+Uma linguagem
+Apenas software livre (o processo de desenvolvimento afeta?)
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Discussão}
+\section{Discussão} \label{sec:discussao}
+
+
