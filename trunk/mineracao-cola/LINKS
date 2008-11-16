@@ -1,0 +1,41 @@
+== Corpora ==
+
+Links da seguinte forma:
+http://dalton.dsc.ufcg.edu.br/labprog1/veRespostas.psp?id=JoaoTargino&roteiro=roteiro8
+
+== Ferramentas que podem ser úteis ==
+
+Natural Language Toolkit (em Python)
+http://nltk.sourceforge.net/index.php/Main_Page
+
+== Softwares de detecção de plágio ==
+
+CopyTracker
+http://copytracker.org/
+Copytracker is a software to detect plagiarism in text documents.
+The software is distributed under the GNU GPL licence so you can use it freely 
+and even improve it.
+
+== Artigos sobre detecção de plágio ==
+
+Text similarity in academic conference papers  (Ferret)
+http://www.jiscpas.ac.uk/documents/papers/2006Papers02.doc
+
+
+PDetect: A Clustering Approach for Detecting Plagiarism in Source Code Datasets 
+
+
+PDE4Java: Plagiarism Detection Engine for Java source code: a clustering approach
+Detecção de plágio em código-fonte Java.
+The educational community across the world is facing the increasing problem of 
+plagiarism. The proposed Plagiarism Detection Engine for Java (PDE4Java) 
+detects code-plagiarism by applying data mining techniques. The engine consists 
+of three main phases; Java tokenisation, similarity measurement and clustering. 
+It has an optional default tokeniser that makes it flexible to be used with 
+almost any programming language. The system provides a visualising 
+representation for each cluster besides the textual representation. The 
+simulation results of PDE4Java showed a comparable performance to that of JPlag 
+and it outperformed the expectations when compared to the domain experts' 
+findings.
+
+
