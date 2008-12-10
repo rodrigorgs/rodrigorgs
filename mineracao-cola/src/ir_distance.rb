@@ -45,21 +45,28 @@ class DocSpace
   # 
   # TODO: normalizar valor
   # TODO: guardar coeficiente entre dois docs a fim de montar um grafo
-  def coeficiente_de_colagem(doc)
+  def coeficiente_de_colagem(doc, debug=false)
+    base = 1.5
+
     others = @doc_list.values - [doc]
+
+    max = 0.0
+    doc.terms.each { |term| max += (1 + base**term.count(" ")) }
 
     coef = 0.0
     doc.terms.each do |term|
       common_docs = others.select { |other| other.terms.include? term }
       freq = common_docs.size #/ others.size.to_f
       if freq > 0
-        score = (1.0 / freq) * (1 + 1.618**term.count(" "))
-        puts "  #{'%8.2f' % score} -- #{term} -- #{common_docs.map{|x| x.name}}"
+        score = (1.0 / freq) * (1 + base**term.count(" "))
+        puts "  #{'%8.2f' % score} -- #{term} -- #{common_docs.map{|x| x.name}}" if debug
         coef += score
       end
     end
 
-    return coef
+    #puts "max: %s,  coef: %s" % [max, coef]
+    max = 1.0 if max == 0.0
+    return coef / max
   end
 
 	def compute_idf
@@ -190,7 +197,7 @@ end
 def create_space()
 	space = DocSpace.new
 
-  Dir.glob("../corpora/05*/*") do |file|
+  Dir.glob("../corpora/06*/*") do |file|
     space.add_doc(Document.new(File.basename(file), IO.read(file)))
   end
 
@@ -219,5 +226,5 @@ if __FILE__ == $0
   doc = distances[-1][0]
   #space = create_space
   #doc = space.doc_list['AntonioRicardo-roteiro2-questao2.txt']
-  space.coeficiente_de_colagem(doc)
+  space.coeficiente_de_colagem(doc, true)
 end
