@@ -1,0 +1,72 @@
+As questoes avaliadas no estudo serao as seguintes (em ordem):
+(roteiro.questao)
+2.1 -- DESCARTADA -- muitos alunos mostram resultados numericos
+4.1 -- lumpy com trace das funcoes
+1.5 -- questao sobre excecoes
+2.2 -- funcoes, fluxo de execucao
+1.3 -- excecoes NameError, SyntaxError, ZeroDivisionError
+3.1
+
+Essas sao as questoes com mais caracteres cuja resposta nao eh um programa.
+
+10.1 -- score = 0.24
+  O que sao dados transientes e dados permanentes?
+  Questao interessante porque alguns alunos colaram da Internet.
+
+10.2 -- score = 1.0
+  O que é discreto?
+  Questao interessante porque alguns alunos colaram da Internet.
+
+1.4
+  Sobre input de numeros inteiros
+
+1.6
+  Sobre aproximacao de floats
+
+2.13
+  O que faz o programa x? (Raiz de equacao do segundo grau)
+
+2.14
+  Retorna o resultado da funcao... (raiz)
+
+2.22
+  Alguma coisa sobre o valor de retorno
+  Respostas curtas
+
+2.3
+  Respostas longas, um pouco de código
+
+3.1 -- score = 0.06
+  Sobre o turtle
+  Respostas longas
+
+4.12
+  Formatacao de strings
+
+4.5
+  Diagrama com variaveis e valores.
+  Respostas longas.
+
+5.1 -- score = 0.06, mas GustavoMedeiros parece ter colado
+  Definicoes: Lexico, Sintaxe, Semantica
+  Boa questao para analisar
+
+6.1 -- score = 0.40
+  Definicao: Ligacao
+
+6.4 -- score = 0.53, muitos n-gramas comuns. O cara copiou acentuação errada: 
+       tem com cedilha no e
+  Tuplas imutáveis
+  Boa questão
+
+8.1 -- score = 0.05
+  Sobre registros com endereco, telefone
+  Respostas longas
+
+8.4 - score = 0.30
+  O que o codigo faz
+
+8.5 -- score = 0.14
+  Respostas bem diversas
+
+
