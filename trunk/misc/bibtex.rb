@@ -22,12 +22,12 @@ def parse_bibtex(filename)
         entry = Entry.new
         entry.key = $2
         entries << entry
-        puts "\n#{entry.key}"
+        #puts "\n#{entry.key}"
       else
         modes.each do |m|
           if line =~ /^\s*#{m} = \{(.+)\}/
             entry[m] = $1
-            puts "#{m} = #{entry[m]}"
+            #puts "#{m} = #{entry[m]}"
           elsif line =~ /^\s*#{m} = \{(.+)/
             entry[m] = $1.lstrip.chomp + " "
             mode = m
@@ -37,7 +37,7 @@ def parse_bibtex(filename)
     else
       if line =~ /(.+)\}(,|\s*$)/
         entry[mode] += $1.lstrip.chomp
-        puts "#{mode} = #{entry[mode]}"
+        #puts "#{mode} = #{entry[mode]}"
         mode = ""
       elsif line.strip.empty?
         entry[mode] += "\n"
@@ -103,6 +103,12 @@ if __FILE__ == $0
 
 #{entry.review}
       "
+    end
+  end
+
+  File.open("Reviews", "w") do |f|
+    entries.select{ |e| !e.review.nil? }.sort_by{|e| e.title}.each do |e|
+      f.puts "  * [Review#{e.key} #{e.title}] (#{e.year})"
     end
   end
 end
