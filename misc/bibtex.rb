@@ -90,7 +90,7 @@ if __FILE__ == $0
   entries = parse_bibtex(filename)
 
   entries.select{ |e| !e.review.nil? }.each do |entry|
-    review_file = File.open("Review#{entry.key}", "w") do |f|
+    review_file = File.open("Review#{entry.key}.wiki", "w") do |f|
       f.puts "#summary \"#{entry.title}\": revisao
 
 *Titulo*: #{entry.title}
@@ -106,7 +106,7 @@ if __FILE__ == $0
     end
   end
 
-  File.open("Reviews", "w") do |f|
+  File.open("Reviews.wiki", "w") do |f|
     entries.select{ |e| !e.review.nil? }.sort_by{|e| e.title}.each do |e|
       f.puts "  * [Review#{e.key} #{e.title}] (#{e.year})"
     end
