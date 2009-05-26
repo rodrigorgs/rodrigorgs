@@ -82,9 +82,12 @@ def build_proto(str):
 
   return proto_query
 
-proto = build_proto("\
- ; par ; il-par, ped-il, mod-ped, db-ped, dot-db\
-")
+str = sys.stdin.read()
+
+proto = build_proto(str) 
+#"\
+# ; par ; il-par, ped-il, mod-ped, db-ped, dot-db\
+#")
 print build_query(proto)
 
 ##
