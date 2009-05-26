@@ -14,6 +14,6 @@ for line in get.readlines():
     fields = [x.strip() for x in line.split('\\000')]
     origem = fields[1]
     destino = fields[2]
-    print "%s-%s;" % (origem, destino)
+    print "%s -- %s;" % (origem, destino)
 
 print "}"
