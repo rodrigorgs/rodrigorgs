@@ -54,7 +54,7 @@ def build_query(proto):
     tables = [proto.alias_to_table(x) for x in alias]
     query += "INNER JOIN %s %s " % (tables[0], alias[0])
     i = 0
-    if not data[tables[0]].has_key(tables[1]): i = 1
+    if not data.has_key(tables[0]) or not data[tables[0]].has_key(tables[1]): i = 1
     query += "ON " + \
     " AND ".join(["%s.%s = %s.%s" % (alias[i], a, alias[1-i], b) for a, b in data[tables[i]][tables[1-i]]]) + "\n"
 
