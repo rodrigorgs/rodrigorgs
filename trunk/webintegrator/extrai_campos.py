@@ -26,27 +26,80 @@ class WizAttribute:
     self.options = []
 
   def __str__(self):
-    return "%s=%s(%s)" % (self.name, self.default, str(self.options))
-
-tipos = dict()
+    return "" #"%s=%s(%s)" % (self.name, self.default, "|".join(self.options))
 
 filename = "/var/tomcat5/webapps/sigaintranet/WEB-INF/definitions/wiz/elem_campo_texto.xml"
-doc = libxml2.parseDoc(file(filename).read())
-params = set()
-for found in doc.xpathEval('//CONTENT'):
-  xml = found.content
-  for m in re.findall('\|wiz(?:\[\d+\])?\.([\d\w]+)(=[\d\w]+)?', xml):
-    t = tipos.setdefault(m[0], WizAttribute(m[0]))
-    if m[1]: t.default = t
-  for m in re.findall('\|wiz(?:\[\d+\])?\.([\d\w]+)\.combo=(.+?)\|', xml):
-    opts = re.findall('\[(.*?)\]', m[1])
-    t = tipos.setdefault(m[0], WizAttribute(m[0]))
-    t.options = opts
-    default = re.findall('{.*?\[(.*?)\]}', m[1])
-    if (len(default) == 1): t.default = default[0]
 
-for x in tipos.values():
-  print str(x)
+directory = "/var/tomcat5/webapps/sigaintranet/WEB-INF/definitions/wiz/"
+filenames = """elem_abas.xml
+elem_aviso_banco.xml
+elem_aviso.xml
+elem_botao_acao.xml
+elem_botao_evento.xml
+elem_botao.xml
+elem_cabecalho.xml
+elem_calendario_duplo.xml
+elem_calendario_funcao.xml
+elem_calendario_simples.xml
+elem_calendario.xml
+elem_campo_arquivo.xml
+elem_campos_ped_il.xml
+elem_campo_texto.xml
+elem_checkbox.xml
+elem_combo_meses.xml
+elem_combo.xml
+elem_dados_pedido.xml
+elem_dual_list.xml
+elem_editor.xml
+elem_faixa.xml
+elem_form_fim.xml
+elem_form_ini.xml
+elem_grid_java.xml
+elem_oculto.xml
+elem_pesquisar_exerc.xml
+elem_pesquisar.xml
+elem_radio.xml
+elem_rodape.xml
+elem_span_fim.xml
+elem_span_ini.xml
+elem_text_area_cont.xml
+elem_text_area.xml
+elem_texto.xml
+js_grid_java.xml
+js_msg.xml""".split("\n")
+
+
+# TODO: tratar nomes de tags e atributos com acentos.
+print "<!ELEMENT wiz ANY>"
+for basename in filenames:
+  tipos = dict()
+  filename = directory + basename
+  tagname = basename.replace('_', '-').split('.')[0]
+
+  doc = libxml2.parseDoc(file(filename).read())
+  params = set()
+  for found in doc.xpathEval('//CONTENT'):
+    xml = found.content
+    for m in re.findall('\|wiz(?:\[\d+\])?\.([\d\w]+)(=[\d\w]+)?', xml):
+      name = m[0].lower()
+      t = tipos.setdefault(name, WizAttribute(name))
+      if m[1]: t.default = t
+    for m in re.findall('\|wiz(?:\[\d+\])?\.([\d\w]+)\.combo=(.+?)\|', xml):
+      opts = re.findall('\[(.*?)\]', m[1])
+      name = m[0].lower()
+      t = tipos.setdefault(name, WizAttribute(name))
+      t.options = opts
+      default = re.findall('{.*?\[(.*?)\]}', m[1])
+      if (len(default) == 1): t.default = default[0]
+
+  print "<!ELEMENT %s EMPTY>" % tagname
+  for x in tipos.values():
+    if len(x.options) == 0:
+      print "<!ATTLIST %s %s CDATA \"%s\">" % (tagname, x.name, x.default)
+    else:
+      print "<!ATTLIST %s %s CDATA (%s) \"%s\">" % (tagname, x.name, "|".join(x.options), x.default)
+    
+
 
 
 ##############################################################################
