@@ -7,17 +7,17 @@ import re
 from elementtree import ElementTree as ET
 from xml.dom.minidom import parseString
 
+import unicodedata
+
+def remove_accents(str):
+  nkfd_form = unicodedata.normalize('NFKD', unicode(str))
+  only_ascii = nkfd_form.encode('ASCII', 'ignore')
+  return only_ascii
+
 ##############################################################################
 ##############################################################################
 ##############################################################################
 # Extrai campos de um tipo de componente de interface do wizard
-# TODO: construir DTD a partir da extraca
-
-# |wiz.<nome-da-propriedade>| 
-# |wiz.<nome-da-propriedade>=<valor-padrão>| 
-# |wiz[<sequência>].<nome-da-propriedade>|  
-# |wiz.<nome-da-propriedade>.combo=<valor#1>[,<valor#2>,...]| 
-#   exemplo: |wiz[4].Asterisco.combo={Não[false]},Sim[true]|
 
 class WizAttribute:
   def __init__(self, name):
@@ -68,13 +68,22 @@ elem_texto.xml
 js_grid_java.xml
 js_msg.xml""".split("\n")
 
+filenames = ["elem_rodape.xml"]
 
-# TODO: tratar nomes de tags e atributos com acentos.
+# |wiz.<nome-da-propriedade>| 
+# |wiz.<nome-da-propriedade>=<valor-padrão>| 
+# |wiz[<sequência>].<nome-da-propriedade>|  
+# |wiz.<nome-da-propriedade>.combo=<valor#1>[,<valor#2>,...]| 
+#   exemplo: |wiz[4].Asterisco.combo={Não[false]},Sim[true]|
+
+
+# TODO: tratar atributos com acentos (os acentos devem ser mantidos)
 print "<!ELEMENT wiz ANY>"
 for basename in filenames:
   tipos = dict()
   filename = directory + basename
   tagname = basename.replace('_', '-').split('.')[0]
+  #tagname = remove_accents(tagname)
 
   doc = libxml2.parseDoc(file(filename).read())
   params = set()
@@ -98,54 +107,5 @@ for basename in filenames:
       print "<!ATTLIST %s %s CDATA \"%s\">" % (tagname, x.name, x.default)
     else:
       print "<!ATTLIST %s %s CDATA (%s) \"%s\">" % (tagname, x.name, "|".join(x.options), x.default)
-    
-
-
-
-##############################################################################
-##############################################################################
-##############################################################################
-# Escreve o arquivo de layout a partir de um XML simplificado
-
-here = """
-<ROOT>
-<campo-texto name="tmp.numero" obrigatorio="true" value="&lt;br/&gt;" newline="OFF"/>
-<botao name="tmp.pesquisar"/>
-
-</ROOT>
-"""
-
-def value(val, default):
-  if val:
-    return val
-  else:
-    return default
-
-#doc = ET.parse(here)
-root = ET.fromstring("<LAYOUT></LAYOUT>")
-ET.SubElement(root, 'HEAD')
-ET.SubElement(root, 'INDEX')
-xGeneric = ET.SubElement(root, 'GENERICFIELDS')
-xUser = ET.SubElement(root, 'USERFIELDS')
-
-
-doc = ET.XML(here)
-for tag in doc.findall("*"):
-  tagName = tag.tag.replace('-', '_')
-  newLine = value(tag.get('newline'), 'ON')
-  elemName = tag.get('name')
-  xField = ET.SubElement(xUser, 'USERFIELD', {'SEQ': 'XXX'})
-  ET.SubElement(xField, 'NEWLINE').text = newLine
-  ET.SubElement(xField, 'DATAFIELD').text = "USR:#elem_%s.xml" % tagName
-  xParams = ET.SubElement(xField, 'PARAMETERS')
-  
-  for attr in tag.attrib.keys():
-    if attr in ['newline', 'name']: continue
-    attrname = attr.lower()
-    val = tag.get(attr)
-    ET.SubElement(xParams, attrname).text = val
-
-minidoc = parseString(ET.tostring(root))
-print minidoc.toprettyxml(indent="  ")
 
 #vim:set ts=2 sw=2 softtabstop=2 expandtab ai
