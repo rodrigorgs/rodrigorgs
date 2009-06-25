@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# -*- coding: latin1 -*-
+# -*- coding: latin-1 -*-
+#vim:set ts=2 sw=2 softtabstop=2 expandtab ai
 
 import libxml2
 import sys
@@ -7,12 +8,11 @@ import re
 from elementtree import ElementTree as ET
 from xml.dom.minidom import parseString
 
-import unicodedata
-
-def remove_accents(str):
-  nkfd_form = unicodedata.normalize('NFKD', unicode(str))
-  only_ascii = nkfd_form.encode('ASCII', 'ignore')
-  return only_ascii
+#import unicodedata
+#def remove_accents(str):
+#  nkfd_form = unicodedata.normalize('NFKD', unicode(str))
+#  only_ascii = nkfd_form.encode('ASCII', 'ignore')
+#  return only_ascii
 
 ##############################################################################
 ##############################################################################
@@ -68,7 +68,7 @@ elem_texto.xml
 js_grid_java.xml
 js_msg.xml""".split("\n")
 
-filenames = ["elem_rodape.xml"]
+#filenames = ["elem_rodape.xml"]
 
 # |wiz.<nome-da-propriedade>| 
 # |wiz.<nome-da-propriedade>=<valor-padrão>| 
@@ -77,8 +77,8 @@ filenames = ["elem_rodape.xml"]
 #   exemplo: |wiz[4].Asterisco.combo={Não[false]},Sim[true]|
 
 
-# TODO: tratar atributos com acentos (os acentos devem ser mantidos)
 print "<!ELEMENT wiz ANY>"
+print "<!ELEMENT gen ANY>"
 for basename in filenames:
   tipos = dict()
   filename = directory + basename
@@ -88,24 +88,27 @@ for basename in filenames:
   doc = libxml2.parseDoc(file(filename).read())
   params = set()
   for found in doc.xpathEval('//CONTENT'):
-    xml = found.content
-    for m in re.findall('\|wiz(?:\[\d+\])?\.([\d\w]+)(=[\d\w]+)?', xml):
+    xml = unicode(found.content, 'utf-8')
+    for m in re.findall('(?u)\|wiz(?:\[\d+\])?\.([\d\w]+)(?:=([\d\w]+))?', xml):
       name = m[0].lower()
       t = tipos.setdefault(name, WizAttribute(name))
-      if m[1]: t.default = t
-    for m in re.findall('\|wiz(?:\[\d+\])?\.([\d\w]+)\.combo=(.+?)\|', xml):
-      opts = re.findall('\[(.*?)\]', m[1])
+      if m[1]: t.default = m[1]
+    for m in re.findall('(?u)\|wiz(?:\[\d+\])?\.([\d\w]+)\.combo=(.+?)\|', xml):
+      opts = re.findall('(?u)\[(.*?)\]', m[1])
       name = m[0].lower()
       t = tipos.setdefault(name, WizAttribute(name))
       t.options = opts
-      default = re.findall('{.*?\[(.*?)\]}', m[1])
+      default = re.findall('(?u){.*?\[(.*?)\]}', m[1])
       if (len(default) == 1): t.default = default[0]
 
   print "<!ELEMENT %s EMPTY>" % tagname
   for x in tipos.values():
+    x.name = x.name.encode('latin-1')
+    x.default = x.default.encode('latin-1')
+    x.options = [w.encode('latin-1') for w in x.options]
     if len(x.options) == 0:
-      print "<!ATTLIST %s %s CDATA \"%s\">" % (tagname, x.name, x.default)
+      s = "<!ATTLIST %s %s CDATA \"%s\">" % (tagname, x.name, x.default)
     else:
-      print "<!ATTLIST %s %s CDATA (%s) \"%s\">" % (tagname, x.name, "|".join(x.options), x.default)
+      s = "<!ATTLIST %s %s CDATA (%s) \"%s\">" % (tagname, x.name, "|".join(x.options), x.default)
+    print s
 
-#vim:set ts=2 sw=2 softtabstop=2 expandtab ai
