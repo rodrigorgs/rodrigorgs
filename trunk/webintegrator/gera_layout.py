@@ -36,8 +36,7 @@ xGeneric = ET.SubElement(root, 'GENERICFIELDS')
 xUser = ET.SubElement(root, 'USERFIELDS')
 
 
-"""<?xml version="1.0" encoding="ISO-8859-1"?>
-<LAYOUT>
+root = ET.fromstring("""<LAYOUT>
   <HEAD>
     <SCRIPT TYPE="text/javascript" SRC="/|wi.proj.id|/js/page.js">***EMPTY_TEXT***</SCRIPT>
     <META HTTP-EQUIV="pragma" CONTENT="no-cache" />
@@ -45,26 +44,31 @@ xUser = ET.SubElement(root, 'USERFIELDS')
     <META HTTP-EQUIV="cache-control" CONTENT="no-cache" />
     <TITLE>|titulo_projeto|</TITLE>
     <TEMPLATE>template</TEMPLATE>
-    <CODE>"""
-
-"""</CODE>
+    <CODE></CODE>
   </HEAD>
-  <INDEX>
-    <USERFIELDS SEQ="1" />
-    <USERFIELDS SEQ="2" />
-    <USERFIELDS SEQ="3" />
-    <USERFIELDS SEQ="4" />
-    <USERFIELDS SEQ="5" />
-    <USERFIELDS SEQ="8" />
-    <USERFIELDS SEQ="9" />
-    <USERFIELDS SEQ="10" />
-    <USERFIELDS SEQ="7" />
-    <USERFIELDS SEQ="6" />
-    <USERFIELDS SEQ="11" />
-    <USERFIELDS SEQ="13" />
-    <GENERICFIELDS SEQ="1" />
-  </INDEX>
-"""
+  <INDEX></INDEX>
+  <GENERICFIELDS/>
+  <USERFIELDS/>
+</LAYOUT>""")
+
+xGeneric = root.find("GENERICFIELDS")
+xUser = root.find("USERFIELDS")
+xCode = root.find("HEAD/CODE")
+#  <INDEX>
+#    <USERFIELDS SEQ="1" />
+#    <USERFIELDS SEQ="2" />
+#    <USERFIELDS SEQ="3" />
+#    <USERFIELDS SEQ="4" />
+#    <USERFIELDS SEQ="5" />
+#    <USERFIELDS SEQ="8" />
+#    <USERFIELDS SEQ="9" />
+#    <USERFIELDS SEQ="10" />
+#    <USERFIELDS SEQ="7" />
+#    <USERFIELDS SEQ="6" />
+#    <USERFIELDS SEQ="11" />
+#    <USERFIELDS SEQ="13" />
+#    <GENERICFIELDS SEQ="1" />
+#  </INDEX>
 
 doc = ET.XML(here)
 for tag in doc.findall("*"):
@@ -83,6 +87,6 @@ for tag in doc.findall("*"):
     ET.SubElement(xParams, attrname).text = val
 
 minidoc = parseString(ET.tostring(root))
-print minidoc.toprettyxml(indent="  ")
+print minidoc.toprettyxml(indent="  ", encoding="ISO-8859-1")
 
 #vim:set ts=2 sw=2 softtabstop=2 expandtab ai
