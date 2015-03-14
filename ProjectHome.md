@@ -1,0 +1,1 @@
+A collection of projects (source code and text) for a variety of purposes.
